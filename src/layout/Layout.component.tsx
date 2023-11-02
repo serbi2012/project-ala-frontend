@@ -9,11 +9,17 @@ import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import ReportProblemOutlinedIcon from "@mui/icons-material/ReportProblemOutlined";
 import CloseIcon from "@mui/icons-material/Close";
 import { useRef } from "react";
+import Sidebar from "./Sidebar/Sidebar.component";
+import { useLocation } from "react-router-dom";
+
+const isExistSidebar = ["/"];
 
 const Layout: React.FC<IProps> = (props: IProps) => {
     const notistackRef = useRef<any>();
 
     const [isLoading] = useRecoilState(isLoadingState);
+
+    const location = useLocation();
 
     const action = (key: any) => (
         <IconButton
@@ -42,15 +48,16 @@ const Layout: React.FC<IProps> = (props: IProps) => {
             action={action}
         >
             <S.MainWrapper>
-                {/* NOTE - 로딩 프로그레스 컨테이너 */}
-                {isLoading && (
-                    <S.LoadingContainer>
-                        <CircularProgress style={{ scale: "4" }} />
-                    </S.LoadingContainer>
-                )}
-
-                {/* NOTE - 컨텐츠 영역 */}
-                <S.ContentWrapper>{props.children}</S.ContentWrapper>
+                {isExistSidebar.includes(location?.pathname) && <Sidebar />}
+                <S.ContentWrapper>
+                    {/* NOTE - 로딩 프로그레스 컨테이너 */}
+                    {isLoading && (
+                        <S.LoadingContainer>
+                            <CircularProgress style={{ scale: "4" }} />
+                        </S.LoadingContainer>
+                    )}
+                    {props.children}
+                </S.ContentWrapper>
             </S.MainWrapper>
         </SnackbarProvider>
     );
