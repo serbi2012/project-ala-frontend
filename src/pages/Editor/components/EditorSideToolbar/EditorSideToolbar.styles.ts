@@ -12,10 +12,10 @@ export const MainWrapper = styled.div`
     margin-top: 5px;
     border-top-right-radius: 10px;
     gap: 15px;
-    background-color: #606b73;
+    background-color: var(--brand-primary-gray);
 `;
 
-export const IconWrapper = styled.div`
+export const IconWrapper = styled.div<{ isActive?: boolean }>`
     display: flex;
     justify-content: center;
     align-items: center;
@@ -25,28 +25,29 @@ export const IconWrapper = styled.div`
     user-select: none;
     cursor: pointer;
     transition: all ease 0.2s;
+    background-color: ${({ isActive }) => (isActive ? "white" : "transparent")};
 
     & > svg {
-        color: white;
+        color: ${({ isActive }) => (isActive ? "var(--brand-primary-gray)" : "white")};
     }
 
     &:hover {
         scale: 1.1;
         border: 1px solid white;
-        background-color: #606b73;
+        background-color: ${({ isActive }) => (isActive ? "white" : "transparent")};
 
         & > svg {
-            color: white;
+            color: ${({ isActive }) => (isActive ? "var(--brand-primary-gray)" : "white")};
         }
     }
 
     &:active {
         scale: 0.9;
         border: 1px solid white;
-        background-color: #606b73;
+        background-color: ${({ isActive }) => (isActive ? "white" : "transparent")};
 
         & > svg {
-            color: white;
+            color: ${({ isActive }) => (isActive ? "var(--brand-primary-gray)" : "white")};
         }
     }
 `;

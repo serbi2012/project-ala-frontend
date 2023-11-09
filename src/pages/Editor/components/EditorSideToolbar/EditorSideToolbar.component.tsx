@@ -3,13 +3,12 @@ import { IEditorSideToolbarProps } from "./EditorSideToolbar.types";
 import NearMeIcon from "@mui/icons-material/NearMe";
 import BrushIcon from "@mui/icons-material/Brush";
 import BackHandIcon from "@mui/icons-material/BackHand";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useRecoilState } from "recoil";
+import { selectedToolState } from "../../../../recoil/atoms/selectedToolState";
 
 const EditorSideToolbar = ({ canvasRef }: IEditorSideToolbarProps) => {
-    const [isCanvasMoveMode, setIsCanvasMoveMode] = useState(false);
-    const [isDragging, setDragging] = useState(false);
-    const [lastMouseX, setLastMouseX] = useState(0);
-    const [lastMouseY, setLastMouseY] = useState(0);
+    const [selectedTool, setSelectedTool] = useRecoilState(selectedToolState);
 
     const handleOnDrawingMode = () => {
         const canvas = canvasRef?.current;
@@ -19,7 +18,7 @@ const EditorSideToolbar = ({ canvasRef }: IEditorSideToolbarProps) => {
             canvas.freeDrawingBrush.color = "black";
             canvas.freeDrawingBrush.width = 2;
 
-            setIsCanvasMoveMode(false);
+            setSelectedTool("drawing");
         }
     };
 
@@ -28,7 +27,8 @@ const EditorSideToolbar = ({ canvasRef }: IEditorSideToolbarProps) => {
 
         if (canvas) {
             canvas.isDrawingMode = false;
-            setIsCanvasMoveMode(false);
+
+            setSelectedTool("select");
         }
     };
 
@@ -36,49 +36,68 @@ const EditorSideToolbar = ({ canvasRef }: IEditorSideToolbarProps) => {
         const canvas = canvasRef?.current;
 
         if (canvas) {
-            setIsCanvasMoveMode(true);
+            canvas.isDrawingMode = false;
+
+            setSelectedTool("canvasMove");
         }
     };
 
     useEffect(() => {
-        if (canvasRef?.current && isCanvasMoveMode) {
-            const canvasElement = document.getElementById("drawing-canvas") as any;
-            const parentElement = canvasElement.parentElement;
+        const canvasElement = document.getElementById("drawing-canvas") as any;
+        const parentElement = canvasElement.parentElement;
 
-            // 마우스 이벤트 리스너를 추가
-            canvasElement.addEventListener("mousedown", (e: any) => {
-                setDragging(true);
-                setLastMouseX(e.clientX);
-                setLastMouseY(e.clientY);
-            });
+        let isDragging: boolean;
+        let mouseX: number;
+        let mouseY: number;
 
-            canvasElement.addEventListener("mouseup", () => {
-                setDragging(false);
-            });
+        const CanvasMoveMouseDown = (event: any) => {
+            if (selectedTool === "canvasMove") {
+                isDragging = true;
 
-            canvasElement.addEventListener("mousemove", (e: any) => {
-                if (isDragging) {
-                    const deltaX = e.clientX - lastMouseX;
-                    const deltaY = e.clientY - lastMouseY;
-                    setLastMouseX(Number(e.clientX));
-                    setLastMouseY(Number(e.clientY));
+                mouseX = event.clientX;
+                mouseY = event.clientY;
+            }
+        };
 
-                    parentElement.style.left = `${parentElement.offsetLeft + deltaX}px`;
-                    parentElement.style.top = `${parentElement.offsetTop + deltaY}px`;
-                }
-            });
-        }
-    }, [isDragging]);
+        const CanvasMoveMouseMove = (event: any) => {
+            if (selectedTool === "canvasMove" && isDragging) {
+                const deltaX = event.clientX - mouseX;
+                const deltaY = event.clientY - mouseY;
+
+                parentElement.style.left = `${parentElement.offsetLeft + deltaX}px`;
+                parentElement.style.top = `${parentElement.offsetTop + deltaY}px`;
+
+                mouseX = event.clientX;
+                mouseY = event.clientY;
+            }
+        };
+
+        const CanvasMoveMouseUp = () => {
+            if (selectedTool === "canvasMove") {
+                isDragging = false;
+            }
+        };
+
+        window.addEventListener("mousedown", CanvasMoveMouseDown);
+        window.addEventListener("mousemove", CanvasMoveMouseMove);
+        window.addEventListener("mouseup", CanvasMoveMouseUp);
+
+        return () => {
+            window.removeEventListener("mousedown", CanvasMoveMouseDown);
+            window.removeEventListener("mousemove", CanvasMoveMouseMove);
+            window.removeEventListener("mouseup", CanvasMoveMouseUp);
+        };
+    }, [selectedTool]);
 
     return (
         <S.MainWrapper>
-            <S.IconWrapper onClick={handleOnSelectMode}>
+            <S.IconWrapper onClick={handleOnSelectMode} isActive={selectedTool === "select"}>
                 <NearMeIcon />
             </S.IconWrapper>
-            <S.IconWrapper onClick={handleOnDrawingMode}>
+            <S.IconWrapper onClick={handleOnDrawingMode} isActive={selectedTool === "drawing"}>
                 <BrushIcon />
             </S.IconWrapper>
-            <S.IconWrapper onClick={handleOnCanvasMoveMode}>
+            <S.IconWrapper onClick={handleOnCanvasMoveMode} isActive={selectedTool === "canvasMove"}>
                 <BackHandIcon />
             </S.IconWrapper>
         </S.MainWrapper>

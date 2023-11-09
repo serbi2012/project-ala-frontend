@@ -8,7 +8,7 @@ export const MainWrapper = styled.div`
     min-height: 40px;
     width: 100%;
     gap: 10px;
-    background-color: #606b73;
+    background-color: var(--brand-primary-gray);
 `;
 
 export const TextWrapper = styled.div`
@@ -23,7 +23,7 @@ export const TextWrapper = styled.div`
         padding: 0px 10px;
         height: 40px;
         color: white;
-        background-color: #606b73;
+        background-color: var(--brand-primary-gray);
         transition: all ease 0.1s;
         user-select: none;
         cursor: pointer;

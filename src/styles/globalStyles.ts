@@ -13,24 +13,11 @@ export const GlobalStyle = styled.createGlobalStyle`
     }
 
     :root {
-        --brand-secondary-white: #fff;
-        --grayscale-gray1: #777;
-        --grayscale-gray2: #dadada;
-        --grayscale-gray3: #f9f9f9;
-        --grayscale-gray4: #999;
-        --color-whitesmoke-100: #f6f6f6;
-        --color-whitesmoke-200: #f3f3f3;
-        --color-gainsboro-100: #d9d9d9;
-        --color-gainsboro-200: #e4e4e4;
-        --color-silver: #bdbbbb;
-        --color-black: #000;
-        --color-firebrick: #d64242;
-        --color-mistyrose: #fedfdf;
-        --brand-secondary-bggray: #f3f3f6;
-        --brand-primary-skyblue: #1ea2d9;
-        --brand-primary-darknavy: #3e414a;
-        --brand-primary-navy: #1d2d5a;
-        --brand-secondary-light-sky-blue: #f1f8fc;
+        --brand-primary-dark: #3e414a;
+        --brand-primary-gray: #606b73;
+        --brand-secondary-dark: #313a40;
+        --brand-secondary-dark-hover: #2f3438;
+        --brand-secondary-dark-active: #474f55;
         --workspace-color: #171719;
     }
 

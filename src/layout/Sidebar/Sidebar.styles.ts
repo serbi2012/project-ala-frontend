@@ -11,7 +11,7 @@ export const MainWrapper = styled.div`
     height: calc(100vh - 20px);
     width: 100px;
     border-radius: 15px;
-    border: 3px solid #606b73;
+    border: 3px solid var(--brand-primary-gray);
 `;
 
 export const IconWrapper = styled(Link)`
@@ -19,7 +19,7 @@ export const IconWrapper = styled(Link)`
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background-color: #606b73;
+    background-color: var(--brand-primary-gray);
     height: 70px;
     width: 70px;
     border-radius: 15px;

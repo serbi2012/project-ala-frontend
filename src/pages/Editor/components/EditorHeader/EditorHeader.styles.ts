@@ -7,7 +7,8 @@ export const MainWrapper = styled.div`
     padding: 0px 10px;
     width: 100%;
     gap: 10px;
-    background-color: #313a40;
+    background-color: var(--brand-secondary-dark);
+    z-index: 9999999 !important;
 `;
 
 export const TextWrapper = styled.div`
@@ -22,17 +23,17 @@ export const TextWrapper = styled.div`
         padding: 0px 10px;
         height: 40px;
         color: white;
-        background-color: #313a40;
+        background-color: var(--brand-secondary-dark);
         transition: all ease 0.1s;
         user-select: none;
         cursor: pointer;
 
         &:hover {
-            background-color: #2f3438;
+            background-color: var(--brand-secondary-dark-hover);
         }
 
         &:active {
-            background-color: #474f55;
+            background-color: var(--brand-secondary-dark-active);
         }
     }
 `;
@@ -50,13 +51,13 @@ export const IconWrapper = styled.div`
     transition: all ease 0.2s;
 
     & > svg {
-        color: #313a40;
+        color: var(--brand-secondary-dark);
     }
 
     &:hover {
         scale: 1.1;
         border: 1px solid white;
-        background-color: #313a40;
+        background-color: var(--brand-secondary-dark);
 
         & > svg {
             color: white;
@@ -66,7 +67,7 @@ export const IconWrapper = styled.div`
     &:active {
         scale: 0.9;
         border: 1px solid white;
-        background-color: #606b73;
+        background-color: var(--brand-secondary-dark-active);
 
         & > svg {
             color: white;
