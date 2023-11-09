@@ -31,6 +31,7 @@ export const GlobalStyle = styled.createGlobalStyle`
         --brand-primary-darknavy: #3e414a;
         --brand-primary-navy: #1d2d5a;
         --brand-secondary-light-sky-blue: #f1f8fc;
+        --workspace-color: #171719;
     }
 
     h1,

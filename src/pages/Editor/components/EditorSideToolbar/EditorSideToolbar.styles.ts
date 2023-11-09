@@ -5,11 +5,11 @@ export const MainWrapper = styled.div`
     justify-content: center;
     align-items: flex-start;
     padding: 10px;
-    height: calc(100vh - 80px);
+    height: calc(100vh - 85px);
     width: 100px;
     grid-template-columns: repeat(2, 30px);
     grid-template-rows: repeat(19, 30px);
-    border-top: 2px solid white;
+    margin-top: 5px;
     border-top-right-radius: 10px;
     gap: 15px;
     background-color: #606b73;

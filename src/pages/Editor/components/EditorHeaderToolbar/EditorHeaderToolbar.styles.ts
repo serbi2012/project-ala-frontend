@@ -5,7 +5,7 @@ export const MainWrapper = styled.div`
     justify-content: flex-start;
     align-items: center;
     padding: 0px 10px;
-    height: 40px;
+    min-height: 40px;
     width: 100%;
     gap: 10px;
     background-color: #606b73;
