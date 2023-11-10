@@ -27,12 +27,12 @@ const Editor = () => {
 
     return (
         <S.MainWrapper>
-            <EditorHeader />
-            <EditorHeaderToolbar />
+            <EditorHeader canvasRef={drawingCanvas} />
+            <EditorHeaderToolbar canvasRef={drawingCanvas} />
             <S.DrawingContainer>
                 <EditorSideToolbar canvasRef={drawingCanvas} />
-                <S.FabricjsCanvasWrapper>
-                    <canvas id="drawing-canvas" height={720} width={1280} />
+                <S.FabricjsCanvasWrapper id="fabricjs-canvas-wrapper">
+                    <canvas id="drawing-canvas" width={1280} height={720} />
                 </S.FabricjsCanvasWrapper>
             </S.DrawingContainer>
         </S.MainWrapper>

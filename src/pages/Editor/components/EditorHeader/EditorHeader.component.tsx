@@ -1,6 +1,8 @@
 import { T } from "../../../../styles/TextGuide.styles";
 import * as S from "./EditorHeader.styles";
 import HomeIcon from "@mui/icons-material/Home";
+import { IEditorHeaderProps } from "./EditorHeader.types";
+import { Link } from "react-router-dom";
 
 const HEADER_MENU_ITEMS = [
     { title: "파일" },
@@ -14,12 +16,16 @@ const HEADER_MENU_ITEMS = [
     { title: "도움" },
 ];
 
-const EditorHeader: React.FC = () => {
+const EditorHeader = ({ canvasRef }: IEditorHeaderProps) => {
+    canvasRef;
+
     return (
         <S.MainWrapper>
-            <S.IconWrapper>
-                <HomeIcon />
-            </S.IconWrapper>
+            <Link to="/">
+                <S.IconWrapper>
+                    <HomeIcon />
+                </S.IconWrapper>
+            </Link>
             <S.TextWrapper>
                 {HEADER_MENU_ITEMS?.map((item, index) => <T.Body2 key={index}>{item?.title}</T.Body2>)}
             </S.TextWrapper>

@@ -43,8 +43,17 @@ const EditorSideToolbar = ({ canvasRef }: IEditorSideToolbarProps) => {
     };
 
     useEffect(() => {
+        const fabricjsCanvasWrapperElement = document.getElementById("fabricjs-canvas-wrapper") as any;
         const canvasElement = document.getElementById("drawing-canvas") as any;
         const parentElement = canvasElement.parentElement;
+
+        if (selectedTool === "canvasMove") {
+            fabricjsCanvasWrapperElement.style.cursor = "grab";
+            parentElement.style.pointerEvents = "none";
+        } else {
+            fabricjsCanvasWrapperElement.style.removeProperty("cursor");
+            parentElement.style.pointerEvents = "all";
+        }
 
         let isDragging: boolean;
         let mouseX: number;
@@ -52,6 +61,8 @@ const EditorSideToolbar = ({ canvasRef }: IEditorSideToolbarProps) => {
 
         const CanvasMoveMouseDown = (event: any) => {
             if (selectedTool === "canvasMove") {
+                fabricjsCanvasWrapperElement.style.cursor = "grabbing";
+
                 isDragging = true;
 
                 mouseX = event.clientX;
@@ -74,18 +85,20 @@ const EditorSideToolbar = ({ canvasRef }: IEditorSideToolbarProps) => {
 
         const CanvasMoveMouseUp = () => {
             if (selectedTool === "canvasMove") {
+                fabricjsCanvasWrapperElement.style.cursor = "grab";
+
                 isDragging = false;
             }
         };
 
-        window.addEventListener("mousedown", CanvasMoveMouseDown);
-        window.addEventListener("mousemove", CanvasMoveMouseMove);
-        window.addEventListener("mouseup", CanvasMoveMouseUp);
+        fabricjsCanvasWrapperElement.addEventListener("mousedown", CanvasMoveMouseDown);
+        fabricjsCanvasWrapperElement.addEventListener("mousemove", CanvasMoveMouseMove);
+        fabricjsCanvasWrapperElement.addEventListener("mouseup", CanvasMoveMouseUp);
 
         return () => {
-            window.removeEventListener("mousedown", CanvasMoveMouseDown);
-            window.removeEventListener("mousemove", CanvasMoveMouseMove);
-            window.removeEventListener("mouseup", CanvasMoveMouseUp);
+            fabricjsCanvasWrapperElement.removeEventListener("mousedown", CanvasMoveMouseDown);
+            fabricjsCanvasWrapperElement.removeEventListener("mousemove", CanvasMoveMouseMove);
+            fabricjsCanvasWrapperElement.removeEventListener("mouseup", CanvasMoveMouseUp);
         };
     }, [selectedTool]);
 

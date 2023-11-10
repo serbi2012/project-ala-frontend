@@ -13,6 +13,7 @@ export const MainWrapper = styled.div`
     border-top-right-radius: 10px;
     gap: 15px;
     background-color: var(--brand-primary-gray);
+    z-index: 9999999 !important;
 `;
 
 export const IconWrapper = styled.div<{ isActive?: boolean }>`

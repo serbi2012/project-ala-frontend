@@ -9,6 +9,7 @@ export const MainWrapper = styled.div`
     width: 100%;
     gap: 10px;
     background-color: var(--brand-primary-gray);
+    z-index: 9999999 !important;
 `;
 
 export const TextWrapper = styled.div`
@@ -59,4 +60,35 @@ export const VerticalLine = styled.div`
     width: 0px;
     user-select: none;
     border-right: 1px solid white;
+`;
+
+export const OptionBox = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    & > p {
+        color: white;
+    }
+`;
+
+export const OptionInputBox = styled.div`
+    & > input {
+        margin-left: 5px;
+        padding: 5px 15px 5px 5px;
+        text-align: right;
+        background-color: transparent;
+        color: white;
+        border: 2px solid var(--header-input-color);
+        border-radius: 5px;
+
+        &:hover {
+            border: 2px solid var(--header-input-color-hover);
+        }
+
+        &:focus {
+            border: 2px solid var(--header-input-color-focus);
+            outline: none;
+        }
+    }
 `;
