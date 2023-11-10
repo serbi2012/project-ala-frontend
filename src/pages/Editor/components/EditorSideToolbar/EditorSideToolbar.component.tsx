@@ -5,18 +5,31 @@ import BrushIcon from "@mui/icons-material/Brush";
 import BackHandIcon from "@mui/icons-material/BackHand";
 import { useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { selectedToolState } from "../../../../recoil/atoms/selectedToolState";
+import { selectedToolOptionState, selectedToolState } from "../../../../recoil/atoms/selectedToolState";
 
 const EditorSideToolbar = ({ canvasRef }: IEditorSideToolbarProps) => {
     const [selectedTool, setSelectedTool] = useRecoilState(selectedToolState);
+    const [selectedToolOption, setSelectedToolOption] = useRecoilState<any>(selectedToolOptionState);
 
     const handleOnDrawingMode = () => {
         const canvas = canvasRef?.current;
 
         if (canvas) {
             canvas.isDrawingMode = true;
-            canvas.freeDrawingBrush.color = "black";
-            canvas.freeDrawingBrush.width = 2;
+            canvas.freeDrawingBrush.color = selectedToolOption?.color ? String(selectedToolOption?.color) : "black";
+            canvas.freeDrawingBrush.width = selectedToolOption?.width ? Number(selectedToolOption?.width) : 2;
+
+            if (!selectedToolOption?.width) {
+                setSelectedToolOption((prev: any) => {
+                    return { ...prev, width: 2 };
+                });
+            }
+
+            if (!selectedToolOption?.width) {
+                setSelectedToolOption((prev: any) => {
+                    return { ...prev, color: "black" };
+                });
+            }
 
             setSelectedTool("drawing");
         }
