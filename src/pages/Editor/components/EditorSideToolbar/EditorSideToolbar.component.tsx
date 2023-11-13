@@ -25,7 +25,7 @@ const EditorSideToolbar = ({ canvasRef }: IEditorSideToolbarProps) => {
                 });
             }
 
-            if (!selectedToolOption?.width) {
+            if (!selectedToolOption?.color) {
                 setSelectedToolOption((prev: any) => {
                     return { ...prev, color: "black" };
                 });
