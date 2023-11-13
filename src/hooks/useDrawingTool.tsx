@@ -29,7 +29,6 @@ const useDrawingTool = ({ canvasRef }: IUseDrawingTool) => {
                     return { ...prev, color: "black" };
                 });
             }
-            console.log("handleOnDrawingTool ~ canvas:", canvas);
 
             setSelectedTool("drawing");
         }
