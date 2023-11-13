@@ -9,6 +9,9 @@ import HeaderOptionInputBox from "../../../../components/@shared/HeaderOptionInp
 import CircleOutlinedIcon from "@mui/icons-material/CircleOutlined";
 import SquareOutlinedIcon from "@mui/icons-material/SquareOutlined";
 import ChangeHistoryOutlinedIcon from "@mui/icons-material/ChangeHistoryOutlined";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import RotateRightIcon from "@mui/icons-material/RotateRight";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 const EditorHeaderToolbar = ({ canvasRef }: IEditorHeaderToolbarProps) => {
     const [selectedTool] = useRecoilState(selectedToolState);
@@ -42,13 +45,17 @@ const EditorHeaderToolbar = ({ canvasRef }: IEditorHeaderToolbarProps) => {
         <S.MainWrapper>
             <S.IconWrapper>{iconMap[selectedTool] || <div />}</S.IconWrapper>
             <S.VerticalLine />
-            <S.OptionBox>
+            <S.OptionContainer>
                 {selectedTool === "drawing" ? (
                     <>
-                        <T.Body2>두께:</T.Body2>
-                        <HeaderOptionInputBox option="width" type="number" />
-                        <T.Body2>색상:</T.Body2>
-                        <HeaderOptionInputBox option="color" type="color" />
+                        <S.OptionBox>
+                            <T.Body2>두께:</T.Body2>
+                            <HeaderOptionInputBox option="width" type="number" suffix="px" />
+                        </S.OptionBox>
+                        <S.OptionBox>
+                            <T.Body2>색상:</T.Body2>
+                            <HeaderOptionInputBox option="color" type="color" suffix="px" />
+                        </S.OptionBox>
                     </>
                 ) : selectedTool === "shape" ? (
                     <>
@@ -76,9 +83,52 @@ const EditorHeaderToolbar = ({ canvasRef }: IEditorHeaderToolbarProps) => {
                         >
                             <ChangeHistoryOutlinedIcon />
                         </S.IconWrapper>
+                        <S.OptionBox>
+                            <T.Body2>크기:</T.Body2>
+                            <HeaderOptionInputBox
+                                option="shapeHeight"
+                                type="number"
+                                prefix="H"
+                                suffix="px"
+                                width={140}
+                            />
+                            <HeaderOptionInputBox
+                                option="shapeWidth"
+                                type="number"
+                                prefix="W"
+                                suffix="px"
+                                width={140}
+                            />
+                        </S.OptionBox>
+                        <S.OptionBox>
+                            <T.Body2>위치:</T.Body2>
+                            <HeaderOptionInputBox option="shapeTop" type="number" prefix="Y" width={140} />
+                            <HeaderOptionInputBox option="shapeLeft" type="number" prefix="W" width={140} />
+                        </S.OptionBox>
+                        <S.OptionBox>
+                            <T.Body2>색상:</T.Body2>
+                            <HeaderOptionInputBox option="shapeFill" type="color" />
+                        </S.OptionBox>
+                        <S.OptionBox>
+                            <T.Body2>테두리 두께:</T.Body2>
+                            <HeaderOptionInputBox option="shapeBorderWidth" type="number" />
+                        </S.OptionBox>
+                        <S.OptionBox>
+                            <T.Body2>테두리 색상:</T.Body2>
+                            <HeaderOptionInputBox option="shapeBorderColor" type="color" />
+                        </S.OptionBox>
+                        <S.IconWrapper>
+                            <DeleteForeverIcon />
+                        </S.IconWrapper>
+                        <S.IconWrapper>
+                            <RotateRightIcon />
+                        </S.IconWrapper>
+                        <S.IconWrapper>
+                            <ContentCopyIcon />
+                        </S.IconWrapper>
                     </>
                 ) : null}
-            </S.OptionBox>
+            </S.OptionContainer>
         </S.MainWrapper>
     );
 };

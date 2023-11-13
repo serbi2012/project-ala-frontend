@@ -49,11 +49,17 @@ export const VerticalLine = styled.div`
     border-right: 1px solid white;
 `;
 
-export const OptionBox = styled.div`
+export const OptionContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 10px;
+`;
+
+export const OptionBox = styled.div`
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
 
     & > p {
         color: white;
@@ -69,7 +75,7 @@ export const OptionInputBox = styled.div<{ width?: number }>`
         margin-left: 5px;
         padding: 5px 45px 5px 5px;
         text-align: right;
-        width: ${({ width }) => (width ? `${width}px` : "auto")};
+        max-width: ${({ width }) => (width ? `${width}px` : "auto")};
         background-color: transparent;
         color: white;
         border: 2px solid var(--header-input-color);
