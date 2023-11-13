@@ -3,127 +3,28 @@ import { IEditorSideToolbarProps } from "./EditorSideToolbar.types";
 import NearMeIcon from "@mui/icons-material/NearMe";
 import BrushIcon from "@mui/icons-material/Brush";
 import BackHandIcon from "@mui/icons-material/BackHand";
-import { useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { selectedToolOptionState, selectedToolState } from "../../../../recoil/atoms/selectedToolState";
+import { selectedToolState } from "../../../../recoil/atoms/selectedToolState";
+import useDrawingTool from "../../../../hooks/useDrawingTool";
+import useSelectTool from "../../../../hooks/useSelectTool";
+import useCanvasMoveTool from "../../../../hooks/useCanvasMoveTool";
 
 const EditorSideToolbar = ({ canvasRef }: IEditorSideToolbarProps) => {
-    const [selectedTool, setSelectedTool] = useRecoilState(selectedToolState);
-    const [selectedToolOption, setSelectedToolOption] = useRecoilState<any>(selectedToolOptionState);
+    const [selectedTool] = useRecoilState(selectedToolState);
 
-    const handleOnDrawingMode = () => {
-        const canvas = canvasRef?.current;
-
-        if (canvas) {
-            canvas.isDrawingMode = true;
-            canvas.freeDrawingBrush.color = selectedToolOption?.color ? String(selectedToolOption?.color) : "black";
-            canvas.freeDrawingBrush.width = selectedToolOption?.width ? Number(selectedToolOption?.width) : 2;
-
-            if (!selectedToolOption?.width) {
-                setSelectedToolOption((prev: any) => {
-                    return { ...prev, width: 2 };
-                });
-            }
-
-            if (!selectedToolOption?.color) {
-                setSelectedToolOption((prev: any) => {
-                    return { ...prev, color: "black" };
-                });
-            }
-
-            setSelectedTool("drawing");
-        }
-    };
-
-    const handleOnSelectMode = () => {
-        const canvas = canvasRef?.current;
-
-        if (canvas) {
-            canvas.isDrawingMode = false;
-
-            setSelectedTool("select");
-        }
-    };
-
-    const handleOnCanvasMoveMode = () => {
-        const canvas = canvasRef?.current;
-
-        if (canvas) {
-            canvas.isDrawingMode = false;
-
-            setSelectedTool("canvasMove");
-        }
-    };
-
-    useEffect(() => {
-        const fabricjsCanvasWrapperElement = document.getElementById("fabricjs-canvas-wrapper") as any;
-        const canvasElement = document.getElementById("drawing-canvas") as any;
-        const parentElement = canvasElement.parentElement;
-
-        if (selectedTool === "canvasMove") {
-            fabricjsCanvasWrapperElement.style.cursor = "grab";
-            parentElement.style.pointerEvents = "none";
-        } else {
-            fabricjsCanvasWrapperElement.style.removeProperty("cursor");
-            parentElement.style.pointerEvents = "all";
-        }
-
-        let isDragging: boolean;
-        let mouseX: number;
-        let mouseY: number;
-
-        const CanvasMoveMouseDown = (event: any) => {
-            if (selectedTool === "canvasMove") {
-                fabricjsCanvasWrapperElement.style.cursor = "grabbing";
-
-                isDragging = true;
-
-                mouseX = event.clientX;
-                mouseY = event.clientY;
-            }
-        };
-
-        const CanvasMoveMouseMove = (event: any) => {
-            if (selectedTool === "canvasMove" && isDragging) {
-                const deltaX = event.clientX - mouseX;
-                const deltaY = event.clientY - mouseY;
-
-                parentElement.style.left = `${parentElement.offsetLeft + deltaX}px`;
-                parentElement.style.top = `${parentElement.offsetTop + deltaY}px`;
-
-                mouseX = event.clientX;
-                mouseY = event.clientY;
-            }
-        };
-
-        const CanvasMoveMouseUp = () => {
-            if (selectedTool === "canvasMove") {
-                fabricjsCanvasWrapperElement.style.cursor = "grab";
-
-                isDragging = false;
-            }
-        };
-
-        fabricjsCanvasWrapperElement.addEventListener("mousedown", CanvasMoveMouseDown);
-        fabricjsCanvasWrapperElement.addEventListener("mousemove", CanvasMoveMouseMove);
-        fabricjsCanvasWrapperElement.addEventListener("mouseup", CanvasMoveMouseUp);
-
-        return () => {
-            fabricjsCanvasWrapperElement.removeEventListener("mousedown", CanvasMoveMouseDown);
-            fabricjsCanvasWrapperElement.removeEventListener("mousemove", CanvasMoveMouseMove);
-            fabricjsCanvasWrapperElement.removeEventListener("mouseup", CanvasMoveMouseUp);
-        };
-    }, [selectedTool]);
+    const { handleOnSelectTool } = useSelectTool({ canvasRef });
+    const { handleOnCanvasMoveTool } = useCanvasMoveTool({ canvasRef });
+    const { handleOnDrawingTool } = useDrawingTool({ canvasRef });
 
     return (
         <S.MainWrapper>
-            <S.IconWrapper onClick={handleOnSelectMode} isActive={selectedTool === "select"}>
+            <S.IconWrapper onClick={handleOnSelectTool} isActive={selectedTool === "select"}>
                 <NearMeIcon />
             </S.IconWrapper>
-            <S.IconWrapper onClick={handleOnDrawingMode} isActive={selectedTool === "drawing"}>
+            <S.IconWrapper onClick={handleOnDrawingTool} isActive={selectedTool === "drawing"}>
                 <BrushIcon />
             </S.IconWrapper>
-            <S.IconWrapper onClick={handleOnCanvasMoveMode} isActive={selectedTool === "canvasMove"}>
+            <S.IconWrapper onClick={handleOnCanvasMoveTool} isActive={selectedTool === "canvasMove"}>
                 <BackHandIcon />
             </S.IconWrapper>
         </S.MainWrapper>
