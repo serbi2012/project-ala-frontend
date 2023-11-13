@@ -17,7 +17,7 @@ const HeaderOptionInputBox = ({ option, type = "number", width = 100 }: IHeaderO
                     })
                 }
             />
-            <S.InputSuffix>px</S.InputSuffix>
+            {type === "number" && <S.InputSuffix>px</S.InputSuffix>}
             <S.InputInvertedTriangle />
         </S.OptionInputBox>
     );
