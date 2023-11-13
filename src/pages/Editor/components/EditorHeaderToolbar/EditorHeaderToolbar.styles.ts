@@ -39,19 +39,6 @@ export const TextWrapper = styled.div`
     }
 `;
 
-export const IconWrapper = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 30px;
-    width: 30px;
-    user-select: none;
-
-    & > svg {
-        color: white;
-    }
-`;
-
 export const VerticalLine = styled.div`
     display: flex;
     justify-content: center;
@@ -66,6 +53,7 @@ export const OptionBox = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 10px;
 
     & > p {
         color: white;
@@ -117,4 +105,41 @@ export const InputInvertedTriangle = styled.div`
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
     transform: translate(-37px, 5px);
+`;
+
+export const IconWrapper = styled.div<{ isActive?: boolean }>`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+    width: 30px;
+    border-radius: 5px;
+    user-select: none;
+    cursor: pointer;
+    transition: all ease 0.2s;
+    background-color: ${({ isActive }) => (isActive ? "white" : "transparent")};
+
+    & > svg {
+        color: ${({ isActive }) => (isActive ? "var(--brand-primary-gray)" : "white")};
+    }
+
+    &:hover {
+        scale: 1.1;
+        border: 1px solid white;
+        background-color: ${({ isActive }) => (isActive ? "white" : "transparent")};
+
+        & > svg {
+            color: ${({ isActive }) => (isActive ? "var(--brand-primary-gray)" : "white")};
+        }
+    }
+
+    &:active {
+        scale: 0.9;
+        border: 1px solid white;
+        background-color: ${({ isActive }) => (isActive ? "white" : "transparent")};
+
+        & > svg {
+            color: ${({ isActive }) => (isActive ? "var(--brand-primary-gray)" : "white")};
+        }
+    }
 `;
