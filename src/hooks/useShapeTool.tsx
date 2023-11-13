@@ -2,6 +2,7 @@ import { MutableRefObject, useRef, useEffect } from "react";
 import { useRecoilState } from "recoil";
 import { selectedToolOptionState, selectedToolState } from "../recoil/atoms/selectedToolState";
 import { fabric } from "fabric";
+import { formatToFix } from "../utils/formatNumber";
 
 interface IUseShapeTool {
     canvasRef: MutableRefObject<fabric.Canvas | null>;
@@ -12,6 +13,7 @@ const useShapeTool = ({ canvasRef }: IUseShapeTool) => {
     const [selectedToolOption, setSelectedToolOption] = useRecoilState<any>(selectedToolOptionState);
 
     const currentShapeRef = useRef<fabric.Object | null>(null);
+    const selectedShapeRef = useRef<fabric.Object | null>(null);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -31,40 +33,79 @@ const useShapeTool = ({ canvasRef }: IUseShapeTool) => {
 
     useEffect(() => {
         const canvas = canvasRef.current;
+        const shape = selectedShapeRef.current;
+
+        if (!canvas) return;
+        if (!shape || selectedTool !== "shape") return;
+
+        shape
+            .set({
+                height: formatToFix(selectedToolOption.shapeHeight),
+                width: formatToFix(selectedToolOption.shapeWidth),
+                top: formatToFix(selectedToolOption.shapeTop),
+                left: formatToFix(selectedToolOption.shapeLeft),
+                fill: selectedToolOption.shapeFill,
+                strokeWidth: formatToFix(selectedToolOption.shapeBorderWidth),
+                stroke: selectedToolOption.shapeBorderColor,
+            })
+            .setCoords();
+
+        canvas?.renderAll();
+    }, [selectedToolOption]);
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
 
         if (!canvas) return;
 
         const startDrawing = (options: any) => {
             if (selectedTool !== "shape") return;
-            const shapeType = selectedToolOption?.shapeTarget;
 
-            canvas.selection = false;
+            const selectedShapeType = selectedToolOption?.shapeTarget;
+            canvas.selection = true;
 
-            if (shapeType) {
-                const pointer = canvas.getPointer(options.e);
-                let shape: fabric.Object | null = null;
+            if (options?.target) {
+                if (selectedShapeRef.current !== options?.target) {
+                    setSelectedToolOption((prevOptions: any) => ({
+                        ...prevOptions,
+                        shapeHeight: formatToFix(options?.target?.height * options?.target?.scaleY),
+                        shapeWidth: formatToFix(options?.target?.width * options?.target?.scaleX),
+                        shapeTop: formatToFix(options?.target?.top),
+                        shapeLeft: formatToFix(options?.target?.left),
+                        shapeFill: options?.target?.fill,
+                        shapeBorderWidth: options?.target?.strokeWidth,
+                        shapeBorderColor: options?.target?.stroke,
+                    }));
 
-                const shapeOptions = {
-                    left: pointer.x,
-                    top: pointer.y,
-                    strokeWidth: selectedToolOption.strokeWidth || 1,
-                    stroke: selectedToolOption.stroke || "transparent",
-                    fill: selectedToolOption.fill || "black",
-                    selectable: false,
-                    evented: false,
-                };
-
-                if (shapeType === "rect") {
-                    shape = new fabric.Rect({ ...shapeOptions, width: 1, height: 1 });
-                } else if (shapeType === "ellipse") {
-                    shape = new fabric.Ellipse({ ...shapeOptions, rx: 1, ry: 1 });
-                } else if (shapeType === "triangle") {
-                    shape = new fabric.Triangle({ ...shapeOptions, width: 1, height: 1 });
+                    selectedShapeRef.current = options?.target;
                 }
+            } else {
+                if (selectedShapeType) {
+                    const pointer = canvas.getPointer(options.e);
+                    let shape: fabric.Object | null = null;
 
-                if (shape) {
-                    canvas.add(shape);
-                    currentShapeRef.current = shape;
+                    const shapeOptions = {
+                        left: pointer.x,
+                        top: pointer.y,
+                        strokeWidth: selectedToolOption.shapeBorderWidth || 0,
+                        stroke: selectedToolOption.shapeBorderColor || "transparent",
+                        fill: selectedToolOption.shapeFill || "black",
+                        selectable: true,
+                        evented: true,
+                    };
+
+                    if (selectedShapeType === "rect") {
+                        shape = new fabric.Rect({ ...shapeOptions, width: 1, height: 1 });
+                    } else if (selectedShapeType === "ellipse") {
+                        shape = new fabric.Ellipse({ ...shapeOptions, rx: 1, ry: 1 });
+                    } else if (selectedShapeType === "triangle") {
+                        shape = new fabric.Triangle({ ...shapeOptions, width: 1, height: 1 });
+                    }
+
+                    if (shape) {
+                        canvas.add(shape);
+                        currentShapeRef.current = shape;
+                    }
                 }
             }
         };
@@ -92,10 +133,27 @@ const useShapeTool = ({ canvasRef }: IUseShapeTool) => {
 
             const shape = currentShapeRef.current;
             if (shape) {
-                shape.set({ selectable: true, evented: true });
+                let isTooSmall = false;
+
+                if (shape instanceof fabric.Ellipse) {
+                    isTooSmall =
+                        Number(shape?.rx) * Number(shape?.scaleX) <= 2 ||
+                        Number(shape?.ry) * Number(shape?.scaleY) <= 2;
+                } else {
+                    isTooSmall = shape.getScaledWidth() <= 2 || shape.getScaledHeight() <= 2;
+                }
+
+                if (isTooSmall) {
+                    canvasRef.current?.remove(shape);
+                } else {
+                    shape.set({ selectable: true, evented: true });
+                    canvasRef.current?.setActiveObject(shape);
+                }
+
                 currentShapeRef.current = null;
-                canvas.setActiveObject(shape);
             }
+
+            canvasRef.current?.renderAll();
         };
 
         canvas.on("mouse:down", startDrawing);
@@ -107,7 +165,7 @@ const useShapeTool = ({ canvasRef }: IUseShapeTool) => {
             canvas.off("mouse:move", continueDrawing);
             canvas.off("mouse:up", finishDrawing);
         };
-    }, [canvasRef, selectedToolOption, selectedTool]);
+    }, [canvasRef, selectedTool]);
 
     const handleOnShapeTool = () => {
         setSelectedTool("shape");
@@ -117,17 +175,6 @@ const useShapeTool = ({ canvasRef }: IUseShapeTool) => {
                 ...prevOptions,
                 shapeTarget: "rect",
             }));
-
-        if (canvasRef.current) {
-            canvasRef.current.forEachObject((object) => {
-                object.set({
-                    selectable: false,
-                    evented: false,
-                });
-            });
-            canvasRef.current.discardActiveObject();
-            canvasRef.current.renderAll();
-        }
     };
 
     return { handleOnShapeTool };

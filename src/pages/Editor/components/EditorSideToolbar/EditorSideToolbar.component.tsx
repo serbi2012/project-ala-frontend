@@ -24,11 +24,11 @@ const EditorSideToolbar = ({ canvasRef }: IEditorSideToolbarProps) => {
             <S.IconWrapper onClick={handleOnSelectTool} isActive={selectedTool === "select"}>
                 <NearMeIcon />
             </S.IconWrapper>
-            <S.IconWrapper onClick={handleOnDrawingTool} isActive={selectedTool === "drawing"}>
-                <BrushIcon />
-            </S.IconWrapper>
             <S.IconWrapper onClick={handleOnCanvasMoveTool} isActive={selectedTool === "canvasMove"}>
                 <BackHandIcon />
+            </S.IconWrapper>
+            <S.IconWrapper onClick={handleOnDrawingTool} isActive={selectedTool === "drawing"}>
+                <BrushIcon />
             </S.IconWrapper>
             <S.IconWrapper onClick={handleOnShapeTool} isActive={selectedTool === "shape"}>
                 <CategoryIcon />
