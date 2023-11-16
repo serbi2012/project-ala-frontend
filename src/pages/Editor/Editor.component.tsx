@@ -4,6 +4,7 @@ import * as S from "./Editor.styles";
 import EditorHeader from "./components/EditorHeader/EditorHeader.component";
 import EditorHeaderToolbar from "./components/EditorHeaderToolbar/EditorHeaderToolbar.component";
 import EditorSideToolbar from "./components/EditorSideToolbar/EditorSideToolbar.component";
+import { AlignGuidelines } from "fabric-guideline-plugin";
 
 const Editor = () => {
     const drawingCanvas = useRef<fabric.Canvas | null>(null);
@@ -11,6 +12,12 @@ const Editor = () => {
     useEffect(() => {
         if (!drawingCanvas.current) {
             drawingCanvas.current = new fabric.Canvas("drawing-canvas");
+
+            const guideline = new AlignGuidelines({
+                canvas: drawingCanvas.current,
+            });
+
+            guideline.init();
 
             const canvas = drawingCanvas.current;
 

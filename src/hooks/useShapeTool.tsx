@@ -62,23 +62,22 @@ const useShapeTool = ({ canvasRef }: IUseShapeTool) => {
             if (selectedTool !== "shape") return;
 
             const selectedShapeType = selectedToolOption?.shapeTarget;
-            canvas.selection = true;
+            canvas.selection = false;
 
             if (options?.target) {
-                if (selectedShapeRef.current !== options?.target) {
-                    setSelectedToolOption((prevOptions: any) => ({
-                        ...prevOptions,
-                        shapeHeight: formatToFix(options?.target?.height * options?.target?.scaleY),
-                        shapeWidth: formatToFix(options?.target?.width * options?.target?.scaleX),
-                        shapeTop: formatToFix(options?.target?.top),
-                        shapeLeft: formatToFix(options?.target?.left),
-                        shapeFill: options?.target?.fill,
-                        shapeBorderWidth: options?.target?.strokeWidth,
-                        shapeBorderColor: options?.target?.stroke,
-                    }));
-
-                    selectedShapeRef.current = options?.target;
-                }
+                // if (selectedShapeRef.current !== options?.target) {
+                //     setSelectedToolOption((prevOptions: any) => ({
+                //         ...prevOptions,
+                //         shapeHeight: formatToFix(options?.target?.height * options?.target?.scaleY),
+                //         shapeWidth: formatToFix(options?.target?.width * options?.target?.scaleX),
+                //         shapeTop: formatToFix(options?.target?.top),
+                //         shapeLeft: formatToFix(options?.target?.left),
+                //         shapeFill: options?.target?.fill,
+                //         shapeBorderWidth: options?.target?.strokeWidth,
+                //         shapeBorderColor: options?.target?.stroke,
+                //     }));
+                //     selectedShapeRef.current = options?.target;
+                // }
             } else {
                 if (selectedShapeType) {
                     const pointer = canvas.getPointer(options.e);
@@ -154,6 +153,7 @@ const useShapeTool = ({ canvasRef }: IUseShapeTool) => {
             }
 
             canvasRef.current?.renderAll();
+            canvas.selection = true;
         };
 
         canvas.on("mouse:down", startDrawing);
@@ -165,12 +165,12 @@ const useShapeTool = ({ canvasRef }: IUseShapeTool) => {
             canvas.off("mouse:move", continueDrawing);
             canvas.off("mouse:up", finishDrawing);
         };
-    }, [canvasRef, selectedTool]);
+    }, [canvasRef, selectedTool, selectedToolOption?.shapeTarget]);
 
     const handleOnShapeTool = () => {
         setSelectedTool("shape");
 
-        if (!selectedToolOption?.shapeMode)
+        if (!selectedToolOption?.shapeTarget)
             setSelectedToolOption((prevOptions: any) => ({
                 ...prevOptions,
                 shapeTarget: "rect",
