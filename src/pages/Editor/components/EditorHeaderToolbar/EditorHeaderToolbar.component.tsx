@@ -25,6 +25,46 @@ const EditorHeaderToolbar = ({ canvasRef }: IEditorHeaderToolbarProps) => {
         });
     };
 
+    const handleDeleteShape = () => {
+        const canvas = canvasRef.current;
+        const activeObject = canvas?.getActiveObject();
+
+        if (activeObject) {
+            canvas.remove(activeObject);
+            canvas.discardActiveObject().renderAll();
+        }
+    };
+
+    const handleRotateShape = () => {
+        const canvas = canvasRef.current;
+        const activeObject = canvas?.getActiveObject();
+
+        if (activeObject) {
+            activeObject.rotate((activeObject.angle || 0) + 90);
+            activeObject.setCoords();
+            canvas.renderAll();
+        }
+    };
+
+    const handleCopyShape = () => {
+        const canvas = canvasRef.current;
+        const activeObject = canvas?.getActiveObject();
+
+        if (activeObject && activeObject.clone) {
+            activeObject.clone((cloned: any) => {
+                canvas.add(
+                    cloned.set({
+                        left: cloned.left + 10,
+                        top: cloned.top + 10,
+                        evented: true,
+                    }),
+                );
+                canvas.setActiveObject(cloned);
+                canvas.renderAll();
+            });
+        }
+    };
+
     useEffect(() => {
         const canvas = canvasRef?.current;
 
@@ -117,13 +157,13 @@ const EditorHeaderToolbar = ({ canvasRef }: IEditorHeaderToolbarProps) => {
                             <T.Body2>테두리 색상:</T.Body2>
                             <HeaderOptionInputBox option="shapeBorderColor" type="color" />
                         </S.OptionBox>
-                        <S.IconWrapper>
+                        <S.IconWrapper onClick={handleDeleteShape}>
                             <DeleteForeverIcon />
                         </S.IconWrapper>
-                        <S.IconWrapper>
+                        <S.IconWrapper onClick={handleRotateShape}>
                             <RotateRightIcon />
                         </S.IconWrapper>
-                        <S.IconWrapper>
+                        <S.IconWrapper onClick={handleCopyShape}>
                             <ContentCopyIcon />
                         </S.IconWrapper>
                     </>

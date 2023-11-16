@@ -5948,6 +5948,11 @@ ext@^1.1.2:
   dependencies:
     type "^2.7.2"
 
+fabric-guideline-plugin@^0.0.11:
+  version "0.0.11"
+  resolved "https://registry.yarnpkg.com/fabric-guideline-plugin/-/fabric-guideline-plugin-0.0.11.tgz#bd42c5b5bec6c55efb1062da08df988be0497a8e"
+  integrity sha512-qeocIwDR8KHMQpGlVUZeiOlm1IyHpnCYNHt+nAUxcq3dckOuXA/40X3No5Haeoj49nsNWsmBUlMxffxjpTOsKQ==
+
 fabric@^5.3.0:
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/fabric/-/fabric-5.3.0.tgz#199297b6409e3a6279c16c1166da2b2a9e3e8b9b"
