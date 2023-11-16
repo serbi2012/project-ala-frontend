@@ -126,14 +126,14 @@ const EditorHeaderToolbar = ({ canvasRef }: IEditorHeaderToolbarProps) => {
                         <S.OptionBox>
                             <T.Body2>크기:</T.Body2>
                             <HeaderOptionInputBox
-                                option="shapeHeight"
+                                option="shapeTotalHeight"
                                 type="number"
                                 prefix="H"
                                 suffix="px"
                                 width={140}
                             />
                             <HeaderOptionInputBox
-                                option="shapeWidth"
+                                option="shapeTotalWidth"
                                 type="number"
                                 prefix="W"
                                 suffix="px"
