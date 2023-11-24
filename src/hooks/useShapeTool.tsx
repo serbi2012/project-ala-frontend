@@ -1,4 +1,4 @@
-import { MutableRefObject, useRef, useEffect } from "react";
+import { MutableRefObject, useRef, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { selectedToolOptionState, selectedToolState } from "../recoil/atoms/selectedToolState";
 import { fabric } from "fabric";
@@ -12,8 +12,28 @@ const useShapeTool = ({ canvasRef }: IUseShapeTool) => {
     const [selectedTool, setSelectedTool] = useRecoilState(selectedToolState);
     const [selectedToolOption, setSelectedToolOption] = useRecoilState<any>(selectedToolOptionState);
 
+    const [selectedShape, setSelectedShape] = useState<fabric.Object | null>(null);
+
     const currentShapeRef = useRef<fabric.Object | null>(null);
-    const selectedShapeRef = useRef<fabric.Object | null>(null);
+    const startXRef = useRef(0);
+    const startYRef = useRef(0);
+
+    const setShapeData = (shape: fabric.Object | null) => {
+        setSelectedToolOption((prevOptions: any) => ({
+            ...prevOptions,
+            shapeTotalHeight: formatToFix(Number(shape?.height) * Number(shape?.scaleY)),
+            shapeTotalWidth: formatToFix(Number(shape?.width) * Number(shape?.scaleX)),
+            shapeHeight: Number(shape?.height),
+            shapeWidth: Number(shape?.width),
+            shapeScaleY: Number(shape?.scaleY),
+            shapeScaleX: Number(shape?.scaleX),
+            shapeTop: formatToFix(Number(shape?.top)),
+            shapeLeft: formatToFix(Number(shape?.left)),
+            shapeFill: shape?.fill,
+            shapeBorderWidth: Number(shape?.strokeWidth),
+            shapeBorderColor: shape?.stroke,
+        }));
+    };
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -21,10 +41,7 @@ const useShapeTool = ({ canvasRef }: IUseShapeTool) => {
 
         if (selectedTool === "select") {
             canvas.forEachObject((object) => {
-                object.set({
-                    selectable: true,
-                    evented: true,
-                });
+                object.set({ selectable: true, evented: true });
             });
 
             canvas.renderAll();
@@ -32,21 +49,37 @@ const useShapeTool = ({ canvasRef }: IUseShapeTool) => {
     }, [selectedTool]);
 
     useEffect(() => {
+        setShapeData(selectedShape);
+    }, [selectedShape]);
+
+    useEffect(() => {
         const canvas = canvasRef.current;
-        const shape = selectedShapeRef.current;
+        const shape = selectedShape;
+        const {
+            shapeTotalHeight,
+            shapeTotalWidth,
+            shapeTop,
+            shapeLeft,
+            shapeFill,
+            shapeBorderWidth,
+            shapeBorderColor,
+        } = selectedToolOption;
 
         if (!canvas) return;
         if (!shape || selectedTool !== "shape") return;
+        if (!shapeTop && !shapeLeft) return;
 
         shape
             .set({
-                height: formatToFix(selectedToolOption.shapeHeight),
-                width: formatToFix(selectedToolOption.shapeWidth),
-                top: formatToFix(selectedToolOption.shapeTop),
-                left: formatToFix(selectedToolOption.shapeLeft),
-                fill: selectedToolOption.shapeFill,
-                strokeWidth: formatToFix(selectedToolOption.shapeBorderWidth),
-                stroke: selectedToolOption.shapeBorderColor,
+                height: formatToFix(shapeTotalHeight),
+                width: formatToFix(shapeTotalWidth),
+                scaleY: 1,
+                scaleX: 1,
+                top: formatToFix(shapeTop),
+                left: formatToFix(shapeLeft),
+                fill: shapeFill,
+                strokeWidth: formatToFix(shapeBorderWidth),
+                stroke: shapeBorderColor,
             })
             .setCoords();
 
@@ -62,22 +95,17 @@ const useShapeTool = ({ canvasRef }: IUseShapeTool) => {
             if (selectedTool !== "shape") return;
 
             const selectedShapeType = selectedToolOption?.shapeTarget;
+            const target = options?.target;
+
+            startXRef.current = options.pointer?.x || 0;
+            startYRef.current = options.pointer?.y || 0;
+
             canvas.selection = false;
 
-            if (options?.target) {
-                // if (selectedShapeRef.current !== options?.target) {
-                //     setSelectedToolOption((prevOptions: any) => ({
-                //         ...prevOptions,
-                //         shapeHeight: formatToFix(options?.target?.height * options?.target?.scaleY),
-                //         shapeWidth: formatToFix(options?.target?.width * options?.target?.scaleX),
-                //         shapeTop: formatToFix(options?.target?.top),
-                //         shapeLeft: formatToFix(options?.target?.left),
-                //         shapeFill: options?.target?.fill,
-                //         shapeBorderWidth: options?.target?.strokeWidth,
-                //         shapeBorderColor: options?.target?.stroke,
-                //     }));
-                //     selectedShapeRef.current = options?.target;
-                // }
+            if (target) {
+                if (selectedShape !== target) {
+                    setSelectedShape(target);
+                }
             } else {
                 if (selectedShapeType) {
                     const pointer = canvas.getPointer(options.e);
@@ -111,12 +139,25 @@ const useShapeTool = ({ canvasRef }: IUseShapeTool) => {
 
         const continueDrawing = (options: any) => {
             const shape = currentShapeRef.current;
-            if (!shape) return;
+
+            if (!shape || shape.left === undefined || shape.top === undefined) return;
             if (selectedTool !== "shape") return;
 
             const pointer = canvas.getPointer(options.e);
-            const width = Math.abs(pointer.x - (shape.left ?? 0));
-            const height = Math.abs(pointer.y - (shape.top ?? 0));
+
+            // 마우스 포인터가 시작점보다 작으면 object 위치보정
+            if (startXRef.current > pointer.x) {
+                shape.set({ left: Math.abs(pointer.x) });
+            }
+            if (startYRef.current > pointer.y) {
+                shape.set({ top: Math.abs(pointer.y) });
+            }
+
+            const width = Math.abs(startXRef.current - pointer.x);
+            console.log("continueDrawing ~ shape.left:", shape.left);
+            console.log("continueDrawing ~ pointer.x:", pointer.x);
+            console.log("continueDrawing ~ width:", width);
+            const height = Math.abs(startYRef.current - pointer.y);
 
             if (shape instanceof fabric.Rect || shape instanceof fabric.Triangle) {
                 shape.set({ width, height });
@@ -127,13 +168,14 @@ const useShapeTool = ({ canvasRef }: IUseShapeTool) => {
             canvas.renderAll();
         };
 
-        const finishDrawing = () => {
+        const finishDrawing = (options: any) => {
             if (selectedTool !== "shape") return;
 
             const shape = currentShapeRef.current;
-            if (shape) {
-                let isTooSmall = false;
 
+            let isTooSmall = false;
+
+            if (shape) {
                 if (shape instanceof fabric.Ellipse) {
                     isTooSmall =
                         Number(shape?.rx) * Number(shape?.scaleX) <= 2 ||
@@ -147,10 +189,15 @@ const useShapeTool = ({ canvasRef }: IUseShapeTool) => {
                 } else {
                     shape.set({ selectable: true, evented: true });
                     canvasRef.current?.setActiveObject(shape);
+                    setSelectedShape(shape);
                 }
 
                 currentShapeRef.current = null;
             }
+            setShapeData((shape && isTooSmall) || options?.target || null);
+
+            startXRef.current = 0;
+            startYRef.current = 0;
 
             canvasRef.current?.renderAll();
             canvas.selection = true;
@@ -171,10 +218,7 @@ const useShapeTool = ({ canvasRef }: IUseShapeTool) => {
         setSelectedTool("shape");
 
         if (!selectedToolOption?.shapeTarget)
-            setSelectedToolOption((prevOptions: any) => ({
-                ...prevOptions,
-                shapeTarget: "rect",
-            }));
+            setSelectedToolOption((prevOptions: any) => ({ ...prevOptions, shapeTarget: "rect" }));
     };
 
     return { handleOnShapeTool };
