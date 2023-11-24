@@ -15,6 +15,8 @@ const useShapeTool = ({ canvasRef }: IUseShapeTool) => {
     const [selectedShape, setSelectedShape] = useState<fabric.Object | null>(null);
 
     const currentShapeRef = useRef<fabric.Object | null>(null);
+    const startXRef = useRef(0);
+    const startYRef = useRef(0);
 
     const setShapeData = (shape: fabric.Object | null) => {
         setSelectedToolOption((prevOptions: any) => ({
@@ -39,10 +41,7 @@ const useShapeTool = ({ canvasRef }: IUseShapeTool) => {
 
         if (selectedTool === "select") {
             canvas.forEachObject((object) => {
-                object.set({
-                    selectable: true,
-                    evented: true,
-                });
+                object.set({ selectable: true, evented: true });
             });
 
             canvas.renderAll();
@@ -98,6 +97,9 @@ const useShapeTool = ({ canvasRef }: IUseShapeTool) => {
             const selectedShapeType = selectedToolOption?.shapeTarget;
             const target = options?.target;
 
+            startXRef.current = options.pointer?.x || 0;
+            startYRef.current = options.pointer?.y || 0;
+
             canvas.selection = false;
 
             if (target) {
@@ -137,12 +139,25 @@ const useShapeTool = ({ canvasRef }: IUseShapeTool) => {
 
         const continueDrawing = (options: any) => {
             const shape = currentShapeRef.current;
-            if (!shape) return;
+
+            if (!shape || shape.left === undefined || shape.top === undefined) return;
             if (selectedTool !== "shape") return;
 
             const pointer = canvas.getPointer(options.e);
-            const width = Math.abs(pointer.x - (shape.left ?? 0));
-            const height = Math.abs(pointer.y - (shape.top ?? 0));
+
+            // 마우스 포인터가 시작점보다 작으면 object 위치보정
+            if (startXRef.current > pointer.x) {
+                shape.set({ left: Math.abs(pointer.x) });
+            }
+            if (startYRef.current > pointer.y) {
+                shape.set({ top: Math.abs(pointer.y) });
+            }
+
+            const width = Math.abs(startXRef.current - pointer.x);
+            console.log("continueDrawing ~ shape.left:", shape.left);
+            console.log("continueDrawing ~ pointer.x:", pointer.x);
+            console.log("continueDrawing ~ width:", width);
+            const height = Math.abs(startYRef.current - pointer.y);
 
             if (shape instanceof fabric.Rect || shape instanceof fabric.Triangle) {
                 shape.set({ width, height });
@@ -181,6 +196,9 @@ const useShapeTool = ({ canvasRef }: IUseShapeTool) => {
             }
             setShapeData((shape && isTooSmall) || options?.target || null);
 
+            startXRef.current = 0;
+            startYRef.current = 0;
+
             canvasRef.current?.renderAll();
             canvas.selection = true;
         };
@@ -200,10 +218,7 @@ const useShapeTool = ({ canvasRef }: IUseShapeTool) => {
         setSelectedTool("shape");
 
         if (!selectedToolOption?.shapeTarget)
-            setSelectedToolOption((prevOptions: any) => ({
-                ...prevOptions,
-                shapeTarget: "rect",
-            }));
+            setSelectedToolOption((prevOptions: any) => ({ ...prevOptions, shapeTarget: "rect" }));
     };
 
     return { handleOnShapeTool };
