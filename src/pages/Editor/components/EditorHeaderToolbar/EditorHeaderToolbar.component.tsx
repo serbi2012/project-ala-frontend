@@ -3,7 +3,7 @@ import * as S from "./EditorHeaderToolbar.styles";
 import { selectedToolOptionState, selectedToolState } from "../../../../recoil/atoms/selectedToolState";
 import { useToolIcons } from "../../../../hooks/useToolIcons";
 import { T } from "../../../../styles/TextGuide.styles";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { IEditorHeaderToolbarProps } from "./EditorHeaderToolbar.types";
 import HeaderOptionInputBox from "../../../../components/@shared/HeaderOptionInputBox/HeaderOptionInputBox.component";
 import CircleOutlinedIcon from "@mui/icons-material/CircleOutlined";
@@ -12,8 +12,11 @@ import ChangeHistoryOutlinedIcon from "@mui/icons-material/ChangeHistoryOutlined
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import RotateRightIcon from "@mui/icons-material/RotateRight";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import useCustomHotkeys from "../../../../hooks/useCustomHotkeys";
 
 const EditorHeaderToolbar = ({ canvasRef }: IEditorHeaderToolbarProps) => {
+    const copiedObjectRef = useRef<any>(null);
+
     const [selectedTool] = useRecoilState(selectedToolState);
     const [selectedToolOption, setSelectedToolOption] = useRecoilState<any>(selectedToolOptionState);
 
@@ -27,12 +30,24 @@ const EditorHeaderToolbar = ({ canvasRef }: IEditorHeaderToolbarProps) => {
 
     const handleDeleteShape = () => {
         const canvas = canvasRef.current;
-        const activeObject = canvas?.getActiveObject();
 
-        if (activeObject) {
-            canvas.remove(activeObject);
-            canvas.discardActiveObject().renderAll();
+        const activeObjects = canvas?.getActiveObjects();
+
+        if (activeObjects && activeObjects.length > 0) {
+            activeObjects.forEach((object: fabric.Object) => {
+                canvas.remove(object);
+            });
+
+            canvas.discardActiveObject();
+        } else {
+            const activeObject = canvas?.getActiveObject();
+            if (activeObject) {
+                canvas.remove(activeObject);
+                canvas.discardActiveObject();
+            }
         }
+
+        canvas?.renderAll();
     };
 
     const handleRotateShape = () => {
@@ -50,6 +65,13 @@ const EditorHeaderToolbar = ({ canvasRef }: IEditorHeaderToolbarProps) => {
         const canvas = canvasRef.current;
         const activeObject = canvas?.getActiveObject();
 
+        copiedObjectRef.current = activeObject;
+    };
+
+    const handlePasteShape = () => {
+        const canvas = canvasRef.current;
+        const activeObject = copiedObjectRef.current;
+
         if (activeObject && activeObject.clone) {
             activeObject.clone((cloned: any) => {
                 canvas.add(
@@ -64,6 +86,14 @@ const EditorHeaderToolbar = ({ canvasRef }: IEditorHeaderToolbarProps) => {
             });
         }
     };
+
+    useCustomHotkeys("Delete", handleDeleteShape);
+    useCustomHotkeys("Meta Backspace", handleDeleteShape);
+    useCustomHotkeys("Control r", handleRotateShape);
+    useCustomHotkeys("Control c", handleCopyShape);
+    useCustomHotkeys("Control v", handlePasteShape);
+    useCustomHotkeys("Meta c", handleCopyShape);
+    useCustomHotkeys("Meta v", handlePasteShape);
 
     useEffect(() => {
         const canvas = canvasRef?.current;

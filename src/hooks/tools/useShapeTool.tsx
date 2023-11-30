@@ -1,8 +1,8 @@
 import { MutableRefObject, useRef, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { selectedToolOptionState, selectedToolState } from "../recoil/atoms/selectedToolState";
 import { fabric } from "fabric";
-import { formatToFix } from "../utils/formatNumber";
+import { selectedToolOptionState, selectedToolState } from "../../recoil/atoms/selectedToolState";
+import { formatToFix } from "../../utils/formatNumber";
 
 interface IUseShapeTool {
     canvasRef: MutableRefObject<fabric.Canvas | null>;
@@ -145,18 +145,17 @@ const useShapeTool = ({ canvasRef }: IUseShapeTool) => {
 
             const pointer = canvas.getPointer(options.e);
 
-            // 마우스 포인터가 시작점보다 작으면 object 위치보정
+            if (pointer.x < 0 || pointer.y < 0) return;
+
             if (startXRef.current > pointer.x) {
                 shape.set({ left: Math.abs(pointer.x) });
             }
+
             if (startYRef.current > pointer.y) {
                 shape.set({ top: Math.abs(pointer.y) });
             }
 
             const width = Math.abs(startXRef.current - pointer.x);
-            console.log("continueDrawing ~ shape.left:", shape.left);
-            console.log("continueDrawing ~ pointer.x:", pointer.x);
-            console.log("continueDrawing ~ width:", width);
             const height = Math.abs(startYRef.current - pointer.y);
 
             if (shape instanceof fabric.Rect || shape instanceof fabric.Triangle) {

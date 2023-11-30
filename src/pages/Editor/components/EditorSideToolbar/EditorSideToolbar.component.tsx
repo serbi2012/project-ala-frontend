@@ -6,10 +6,10 @@ import BackHandIcon from "@mui/icons-material/BackHand";
 import CategoryIcon from "@mui/icons-material/Category";
 import { useRecoilState } from "recoil";
 import { selectedToolState } from "../../../../recoil/atoms/selectedToolState";
-import useDrawingTool from "../../../../hooks/useDrawingTool";
-import useSelectTool from "../../../../hooks/useSelectTool";
-import useCanvasMoveTool from "../../../../hooks/useCanvasMoveTool";
-import useShapeTool from "../../../../hooks/useShapeTool";
+import useCanvasMoveTool from "../../../../hooks/tools/useCanvasMoveTool";
+import useDrawingTool from "../../../../hooks/tools/useDrawingTool";
+import useShapeTool from "../../../../hooks/tools/useShapeTool";
+import useSelectTool from "../../../../hooks/tools/useSelectTool";
 
 const EditorSideToolbar = ({ canvasRef }: IEditorSideToolbarProps) => {
     const [selectedTool] = useRecoilState(selectedToolState);
