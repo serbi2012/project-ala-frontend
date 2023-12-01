@@ -1,13 +1,8 @@
 import { T } from "../../../../styles/textGuides.styles";
 import * as S from "./index.styles";
 import HomeIcon from "@mui/icons-material/Home";
-import { MutableRefObject } from "react";
-import { fabric } from "fabric";
 import { Link } from "react-router-dom";
-
-interface IEditorHeaderProps {
-    canvasRef?: MutableRefObject<fabric.Canvas> | any;
-}
+import { ICanvasRef } from "../../../../types/canvasRef";
 
 const HEADER_MENU_ITEMS = [
     { title: "파일" },
@@ -21,7 +16,7 @@ const HEADER_MENU_ITEMS = [
     { title: "도움" },
 ];
 
-const EditorHeader = ({ canvasRef }: IEditorHeaderProps) => {
+const EditorHeader = ({ canvasRef }: ICanvasRef) => {
     canvasRef;
 
     return (

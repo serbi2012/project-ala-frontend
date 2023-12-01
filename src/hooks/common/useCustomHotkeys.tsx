@@ -5,7 +5,6 @@ const hotkeysMap = new Map();
 
 // 단축키 이벤트를 처리하는 함수
 const handleGlobalKeyDown = (event: any) => {
-    console.log("handleGlobalKeyDown ~ event:", event);
     hotkeysMap.forEach((callback, key) => {
         const keySequence = key.split("+").map((k: any) => k.trim());
 

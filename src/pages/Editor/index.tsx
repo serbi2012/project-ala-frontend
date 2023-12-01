@@ -5,9 +5,12 @@ import EditorHeader from "./components/EditorHeader";
 import EditorHeaderToolbar from "./components/EditorHeaderToolbar";
 import EditorSideToolbar from "./components/EditorSideToolbar";
 import { AlignGuidelines } from "fabric-guideline-plugin";
+import { useHotkeysSetup } from "./hooks/useHotkeysSetup";
 
 const Editor = () => {
     const drawingCanvas = useRef<fabric.Canvas | null>(null);
+
+    useHotkeysSetup({ canvasRef: drawingCanvas });
 
     useEffect(() => {
         if (!drawingCanvas.current) {
