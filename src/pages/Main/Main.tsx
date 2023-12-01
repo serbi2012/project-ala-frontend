@@ -1,6 +1,6 @@
 import * as S from "./Main.styles";
-import MainIntroBox from "./components/MainIntroBox/MainIntroBox.component";
-import MainStartBox from "./components/MainStartBox/MainStartBox.component";
+import MainIntroBox from "./components/MainIntroBox/MainIntroBox";
+import MainStartBox from "./components/MainStartBox/MainStartBox";
 
 const Main: React.FC = () => {
     return (

@@ -2,14 +2,52 @@ import { styled } from "styled-components";
 
 export const MainWrapper = styled.div`
     display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+`;
+
+export const OptionBox = styled.div`
+    display: flex;
     justify-content: flex-start;
     align-items: center;
-    padding: 0px 10px;
-    min-height: 40px;
-    width: 100%;
     gap: 10px;
-    background-color: var(--brand-primary-gray);
-    z-index: 99999 !important;
+
+    & > p {
+        color: white;
+    }
+`;
+
+export const OptionInputBox = styled.div<{ width?: number }>`
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    & > input {
+        margin-left: 5px;
+        padding: 5px 45px 5px 5px;
+        text-align: right;
+        max-width: ${({ width }) => (width ? `${width}px` : "auto")};
+        background-color: transparent;
+        color: white;
+        border: 2px solid var(--header-input-color);
+        border-radius: 5px;
+
+        &:hover {
+            border: 2px solid var(--header-input-color-hover);
+        }
+
+        &:focus {
+            border: 2px solid var(--header-input-color-focus);
+            outline: none;
+        }
+    }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
 `;
 
 export const IconWrapper = styled.div<{ isActive?: boolean }>`
@@ -47,14 +85,4 @@ export const IconWrapper = styled.div<{ isActive?: boolean }>`
             color: ${({ isActive }) => (isActive ? "var(--brand-primary-gray)" : "white")};
         }
     }
-`;
-
-export const VerticalLine = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 25px;
-    width: 0px;
-    user-select: none;
-    border-right: 1px solid white;
 `;
