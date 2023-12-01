@@ -9,6 +9,7 @@ const createIconMap = () => {
     const iconMap: Record<string, ReactNode> = {
         select: <NearMeIcon />,
         drawing: <BrushIcon />,
+        line: <BrushIcon />,
         canvasMove: <BackHandIcon />,
         shape: <CategoryIcon />,
     };

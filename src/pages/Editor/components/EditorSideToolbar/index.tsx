@@ -10,6 +10,7 @@ import useDrawingTool from "../../../../hooks/tools/useDrawingTool";
 import useShapeTool from "../../../../hooks/tools/useShapeTool";
 import useSelectTool from "../../../../hooks/tools/useSelectTool";
 import { ICanvasRef } from "../../../../types/canvasRef";
+import useLineTool from "../../../../hooks/tools/useLineTool";
 
 const EditorSideToolbar = ({ canvasRef }: ICanvasRef) => {
     const [selectedTool] = useRecoilState(selectedToolState);
@@ -18,11 +19,13 @@ const EditorSideToolbar = ({ canvasRef }: ICanvasRef) => {
     const { handleOnCanvasMoveTool } = useCanvasMoveTool({ canvasRef });
     const { handleOnDrawingTool } = useDrawingTool({ canvasRef });
     const { handleOnShapeTool } = useShapeTool({ canvasRef });
+    const { handleOnLineTool } = useLineTool({ canvasRef });
 
     const SIDE_TOOL_ITEMS = [
         { name: "select", onClick: handleOnSelectTool, icon: <NearMeIcon /> },
         { name: "canvasMove", onClick: handleOnCanvasMoveTool, icon: <BackHandIcon /> },
         { name: "drawing", onClick: handleOnDrawingTool, icon: <BrushIcon /> },
+        { name: "line", onClick: handleOnLineTool, icon: <BrushIcon /> },
         { name: "shape", onClick: handleOnShapeTool, icon: <CategoryIcon /> },
     ];
 
