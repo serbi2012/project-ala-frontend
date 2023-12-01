@@ -10,7 +10,7 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import RotateRightIcon from "@mui/icons-material/RotateRight";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import useCommonFeature from "../../../../../../hooks/feature/useCommonFeature";
-import { T } from "../../../../../../styles/TextGuide.styles";
+import { T } from "../../../../../../styles/textGuides.styles";
 import HeaderOptionInputBox from "../../../../../../components/@shared/HeaderOptionInputBox";
 
 interface IInputOption {

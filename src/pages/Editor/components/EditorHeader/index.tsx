@@ -1,11 +1,11 @@
-import { T } from "../../../../styles/TextGuide.styles";
+import { T } from "../../../../styles/textGuides.styles";
 import * as S from "./index.styles";
 import HomeIcon from "@mui/icons-material/Home";
 import { MutableRefObject } from "react";
 import { fabric } from "fabric";
 import { Link } from "react-router-dom";
 
-export interface IEditorHeaderProps {
+interface IEditorHeaderProps {
     canvasRef?: MutableRefObject<fabric.Canvas> | any;
 }
 
