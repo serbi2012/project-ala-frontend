@@ -2,7 +2,7 @@ import { MutableRefObject } from "react";
 import { useRecoilState } from "recoil";
 import { selectedToolOptionState, selectedToolState } from "../../../../../../recoil/atoms/selectedToolState";
 import { shapeTargetSelector } from "../../../../../../recoil/selectors/selectedToolSelector";
-import * as S from "./HeaderToolItems.styles";
+import * as S from "./index.styles";
 import CircleOutlinedIcon from "@mui/icons-material/CircleOutlined";
 import SquareOutlinedIcon from "@mui/icons-material/SquareOutlined";
 import ChangeHistoryOutlinedIcon from "@mui/icons-material/ChangeHistoryOutlined";
@@ -11,7 +11,7 @@ import RotateRightIcon from "@mui/icons-material/RotateRight";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import useCommonFeature from "../../../../../../hooks/feature/useCommonFeature";
 import { T } from "../../../../../../styles/TextGuide.styles";
-import HeaderOptionInputBox from "../../../../../../components/@shared/HeaderOptionInputBox/HeaderOptionInputBox";
+import HeaderOptionInputBox from "../../../../../../components/@shared/HeaderOptionInputBox";
 
 interface IInputOption {
     inputType: string;
@@ -41,9 +41,7 @@ const HeaderToolItems = ({ canvasRef }: IHeaderToolItemsProps) => {
 
     const [, setShapeTarget] = useRecoilState(shapeTargetSelector);
 
-    const { handleDeleteShape, handleRotateShape, handleCopyAndPasteShape } = useCommonFeature({
-        canvasRef,
-    });
+    const { handleDeleteShape, handleRotateShape, handleCopyAndPasteShape } = useCommonFeature({ canvasRef });
 
     const HEADER_TOOL_ITEMS_MAP: Record<string, IHeaderToolItem[]> = {
         drawing: [

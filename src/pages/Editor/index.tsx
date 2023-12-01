@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import { fabric } from "fabric";
-import * as S from "./Editor.styles";
-import EditorHeader from "./components/EditorHeader/EditorHeader";
-import EditorHeaderToolbar from "./components/EditorHeaderToolbar/EditorHeaderToolbar.component";
-import EditorSideToolbar from "./components/EditorSideToolbar/EditorSideToolbar";
+import * as S from "./index.styles";
+import EditorHeader from "./components/EditorHeader";
+import EditorHeaderToolbar from "./components/EditorHeaderToolbar";
+import EditorSideToolbar from "./components/EditorSideToolbar";
 import { AlignGuidelines } from "fabric-guideline-plugin";
 
 const Editor = () => {

@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import * as S from "./MainStartBox.styles";
+import * as S from "./index.styles";
 import { T } from "../../../../styles/TextGuide.styles";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { Link } from "react-router-dom";

@@ -1,5 +1,6 @@
-import * as S from "./EditorSideToolbar.styles";
-import { IEditorSideToolbarProps } from "./EditorSideToolbar.types";
+import { MutableRefObject } from "react";
+import { fabric } from "fabric";
+import * as S from "./index.styles";
 import NearMeIcon from "@mui/icons-material/NearMe";
 import BrushIcon from "@mui/icons-material/Brush";
 import BackHandIcon from "@mui/icons-material/BackHand";
@@ -10,6 +11,10 @@ import useCanvasMoveTool from "../../../../hooks/tools/useCanvasMoveTool";
 import useDrawingTool from "../../../../hooks/tools/useDrawingTool";
 import useShapeTool from "../../../../hooks/tools/useShapeTool";
 import useSelectTool from "../../../../hooks/tools/useSelectTool";
+
+export interface IEditorSideToolbarProps {
+    canvasRef?: MutableRefObject<fabric.Canvas> | any;
+}
 
 const EditorSideToolbar = ({ canvasRef }: IEditorSideToolbarProps) => {
     const [selectedTool] = useRecoilState(selectedToolState);

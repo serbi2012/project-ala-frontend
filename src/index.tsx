@@ -3,7 +3,7 @@ import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import { GlobalStyle } from "./styles/globalStyles";
 import { RecoilRoot } from "recoil";
-import Layout from "./layout/Layout.component";
+import Layout from "./layout";
 import { globalTheme } from "./styles/theme.styles";
 import { ThemeProvider } from "@mui/material";
 

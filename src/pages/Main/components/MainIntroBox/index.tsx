@@ -1,5 +1,5 @@
 import { T } from "../../../../styles/TextGuide.styles";
-import * as S from "./MainIntroBox.styles";
+import * as S from "./index.styles";
 
 const MainIntroBox: React.FC = () => {
     return (

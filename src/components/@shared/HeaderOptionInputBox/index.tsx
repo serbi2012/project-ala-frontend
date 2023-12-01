@@ -1,6 +1,6 @@
 import { useRecoilState } from "recoil";
 import { selectedToolOptionState } from "../../../recoil/atoms/selectedToolState";
-import * as S from "./HeaderOptionInputBox.styles";
+import * as S from "./index.styles";
 import { InputAdornment, Slider } from "@mui/material";
 import { useState } from "react";
 

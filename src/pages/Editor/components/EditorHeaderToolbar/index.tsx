@@ -1,11 +1,11 @@
 import { useRecoilState } from "recoil";
-import * as S from "./EditorHeaderToolbar.styles";
+import * as S from "./index.styles";
 import { selectedToolOptionState, selectedToolState } from "../../../../recoil/atoms/selectedToolState";
 import { useToolIcons } from "../../../../hooks/useToolIcons";
 import { MutableRefObject, useEffect } from "react";
 import useCustomHotkeys from "../../../../hooks/useCustomHotkeys";
 import useCommonFeature from "../../../../hooks/feature/useCommonFeature";
-import HeaderToolItems from "./components/HeaderToolItems/HeaderToolItems";
+import HeaderToolItems from "./components/HeaderToolItems";
 
 export interface IEditorHeaderToolbarProps {
     canvasRef?: MutableRefObject<fabric.Canvas> | any;

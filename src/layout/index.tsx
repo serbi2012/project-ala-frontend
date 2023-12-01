@@ -1,5 +1,4 @@
-import * as S from "./Layout.styles";
-import { IProps } from "./Layout.types";
+import * as S from "./index.styles";
 import { isLoadingState } from "../recoil/atoms";
 import { useRecoilState } from "recoil";
 import { CircularProgress, IconButton } from "@mui/material";
@@ -9,8 +8,12 @@ import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import ReportProblemOutlinedIcon from "@mui/icons-material/ReportProblemOutlined";
 import CloseIcon from "@mui/icons-material/Close";
 import { useRef } from "react";
-import Sidebar from "./Sidebar/Sidebar.component";
+import Sidebar from "./Sidebar";
 import { useLocation } from "react-router-dom";
+
+export interface IProps {
+    children: JSX.Element;
+}
 
 const isExistSidebar = ["/"];
 
