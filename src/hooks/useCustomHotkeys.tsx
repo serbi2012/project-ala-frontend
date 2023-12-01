@@ -13,7 +13,6 @@ const useCustomHotkeys = (hotkeys: string | string[], callback: () => void): voi
 
     const handleKeyDown = useCallback(
         (event: KeyboardEvent) => {
-            console.log("useCustomHotkeys ~ event:", event);
             const keys = Array.isArray(hotkeys) ? hotkeys : [hotkeys];
 
             keys.forEach((key) => {

@@ -19,10 +19,7 @@ const useSelectTool = ({ canvasRef }: IUseSelectTool) => {
             setSelectedTool("select");
 
             canvas.forEachObject((obj: any) => {
-                obj.set({
-                    selectable: true,
-                    evented: true,
-                });
+                obj.set({ selectable: true, evented: true });
             });
 
             canvas.renderAll();

@@ -193,6 +193,7 @@ const useShapeTool = ({ canvasRef }: IUseShapeTool) => {
 
                 currentShapeRef.current = null;
             }
+
             setShapeData((shape && isTooSmall) || options?.target || null);
 
             startXRef.current = 0;
@@ -214,6 +215,12 @@ const useShapeTool = ({ canvasRef }: IUseShapeTool) => {
     }, [canvasRef, selectedTool, selectedToolOption?.shapeTarget]);
 
     const handleOnShapeTool = () => {
+        const canvas = canvasRef.current;
+
+        if (!canvas) return;
+
+        canvas.isDrawingMode = false;
+
         setSelectedTool("shape");
 
         if (!selectedToolOption?.shapeTarget)

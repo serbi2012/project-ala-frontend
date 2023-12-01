@@ -8,7 +8,7 @@ export const MainWrapper = styled.div`
     width: 100%;
     gap: 10px;
     background-color: var(--brand-secondary-dark);
-    z-index: 9999999 !important;
+    z-index: 99999 !important;
 `;
 
 export const TextWrapper = styled.div`

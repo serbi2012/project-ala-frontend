@@ -6,10 +6,19 @@ export const GlobalStyle = styled.createGlobalStyle`
     *,
     *::before,
     *::after {
-        margin: 0;
-        padding: 0;
         box-sizing: border-box;
         appearance: none;
+    }
+
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    p {
+        font-family: "Noto Sans KR";
+        color: var(--color-font-darknavy);
     }
 
     :root {
@@ -18,10 +27,12 @@ export const GlobalStyle = styled.createGlobalStyle`
         --brand-secondary-dark: #313a40;
         --brand-secondary-dark-hover: #2f3438;
         --brand-secondary-dark-active: #474f55;
+        --font-color-darknavy: #333333;
         --header-input-color: #474f55;
         --header-input-color-hover: #b2c5d4;
         --header-input-color-focus: #d4ebfc;
         --workspace-color: #171719;
+        --white-color: #ffffff;
     }
 
     h1,

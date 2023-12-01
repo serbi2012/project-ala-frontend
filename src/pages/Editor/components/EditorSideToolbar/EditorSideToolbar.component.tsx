@@ -19,20 +19,20 @@ const EditorSideToolbar = ({ canvasRef }: IEditorSideToolbarProps) => {
     const { handleOnDrawingTool } = useDrawingTool({ canvasRef });
     const { handleOnShapeTool } = useShapeTool({ canvasRef });
 
+    const SIDE_TOOL_ITEMS = [
+        { name: "select", onClick: handleOnSelectTool, icon: <NearMeIcon /> },
+        { name: "canvasMove", onClick: handleOnCanvasMoveTool, icon: <BackHandIcon /> },
+        { name: "drawing", onClick: handleOnDrawingTool, icon: <BrushIcon /> },
+        { name: "shape", onClick: handleOnShapeTool, icon: <CategoryIcon /> },
+    ];
+
     return (
         <S.MainWrapper>
-            <S.IconWrapper onClick={handleOnSelectTool} isActive={selectedTool === "select"}>
-                <NearMeIcon />
-            </S.IconWrapper>
-            <S.IconWrapper onClick={handleOnCanvasMoveTool} isActive={selectedTool === "canvasMove"}>
-                <BackHandIcon />
-            </S.IconWrapper>
-            <S.IconWrapper onClick={handleOnDrawingTool} isActive={selectedTool === "drawing"}>
-                <BrushIcon />
-            </S.IconWrapper>
-            <S.IconWrapper onClick={handleOnShapeTool} isActive={selectedTool === "shape"}>
-                <CategoryIcon />
-            </S.IconWrapper>
+            {SIDE_TOOL_ITEMS.map((item, index) => (
+                <S.IconWrapper key={index} onClick={item?.onClick} isActive={selectedTool === item?.name}>
+                    {item?.icon}
+                </S.IconWrapper>
+            ))}
         </S.MainWrapper>
     );
 };

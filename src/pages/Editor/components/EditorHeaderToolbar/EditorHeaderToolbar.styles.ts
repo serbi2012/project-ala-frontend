@@ -9,7 +9,7 @@ export const MainWrapper = styled.div`
     width: 100%;
     gap: 10px;
     background-color: var(--brand-primary-gray);
-    z-index: 9999999 !important;
+    z-index: 99999 !important;
 `;
 
 export const TextWrapper = styled.div`
@@ -60,6 +60,7 @@ export const OptionBox = styled.div`
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    gap: 10px;
 
     & > p {
         color: white;

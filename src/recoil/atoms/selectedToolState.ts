@@ -5,7 +5,7 @@ export const selectedToolState = atom({
     default: "select",
 });
 
-export const selectedToolOptionState = atom({
+export const selectedToolOptionState = atom<any>({
     key: "selectedToolOptionState",
     default: {},
 });

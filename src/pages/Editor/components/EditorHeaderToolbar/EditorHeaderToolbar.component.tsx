@@ -3,8 +3,7 @@ import * as S from "./EditorHeaderToolbar.styles";
 import { selectedToolOptionState, selectedToolState } from "../../../../recoil/atoms/selectedToolState";
 import { useToolIcons } from "../../../../hooks/useToolIcons";
 import { T } from "../../../../styles/TextGuide.styles";
-import { useEffect, useRef } from "react";
-import { IEditorHeaderToolbarProps } from "./EditorHeaderToolbar.types";
+import { MutableRefObject, useEffect } from "react";
 import HeaderOptionInputBox from "../../../../components/@shared/HeaderOptionInputBox/HeaderOptionInputBox.component";
 import CircleOutlinedIcon from "@mui/icons-material/CircleOutlined";
 import SquareOutlinedIcon from "@mui/icons-material/SquareOutlined";
@@ -13,79 +12,24 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import RotateRightIcon from "@mui/icons-material/RotateRight";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import useCustomHotkeys from "../../../../hooks/useCustomHotkeys";
+import useCommonFeature from "../../../../hooks/feature/useCommonFeature";
+import { shapeTargetSelector } from "../../../../recoil/selectors/selectedToolSeletor";
+
+export interface IEditorHeaderToolbarProps {
+    canvasRef?: MutableRefObject<fabric.Canvas> | any;
+}
 
 const EditorHeaderToolbar = ({ canvasRef }: IEditorHeaderToolbarProps) => {
-    const copiedObjectRef = useRef<any>(null);
-
     const [selectedTool] = useRecoilState(selectedToolState);
-    const [selectedToolOption, setSelectedToolOption] = useRecoilState<any>(selectedToolOptionState);
+    const [selectedToolOption] = useRecoilState<any>(selectedToolOptionState);
+
+    const [, setShapeTarget] = useRecoilState(shapeTargetSelector);
 
     const iconMap = useToolIcons();
-
-    const handleOnShapeTarget = (shape: string) => {
-        setSelectedToolOption((prev: any) => {
-            return { ...prev, shapeTarget: shape };
+    const { handleCopyShape, handleDeleteShape, handlePasteShape, handleRotateShape, handleCopyAndPasteShape } =
+        useCommonFeature({
+            canvasRef,
         });
-    };
-
-    const handleDeleteShape = () => {
-        const canvas = canvasRef.current;
-
-        const activeObjects = canvas?.getActiveObjects();
-
-        if (activeObjects && activeObjects.length > 0) {
-            activeObjects.forEach((object: fabric.Object) => {
-                canvas.remove(object);
-            });
-
-            canvas.discardActiveObject();
-        } else {
-            const activeObject = canvas?.getActiveObject();
-            if (activeObject) {
-                canvas.remove(activeObject);
-                canvas.discardActiveObject();
-            }
-        }
-
-        canvas?.renderAll();
-    };
-
-    const handleRotateShape = () => {
-        const canvas = canvasRef.current;
-        const activeObject = canvas?.getActiveObject();
-
-        if (activeObject) {
-            activeObject.rotate((activeObject.angle || 0) + 90);
-            activeObject.setCoords();
-            canvas.renderAll();
-        }
-    };
-
-    const handleCopyShape = () => {
-        const canvas = canvasRef.current;
-        const activeObject = canvas?.getActiveObject();
-
-        copiedObjectRef.current = activeObject;
-    };
-
-    const handlePasteShape = () => {
-        const canvas = canvasRef.current;
-        const activeObject = copiedObjectRef.current;
-
-        if (activeObject && activeObject.clone) {
-            activeObject.clone((cloned: any) => {
-                canvas.add(
-                    cloned.set({
-                        left: cloned.left + 10,
-                        top: cloned.top + 10,
-                        evented: true,
-                    }),
-                );
-                canvas.setActiveObject(cloned);
-                canvas.renderAll();
-            });
-        }
-    };
 
     useCustomHotkeys("Delete", handleDeleteShape);
     useCustomHotkeys("Meta Backspace", handleDeleteShape);
@@ -120,11 +64,11 @@ const EditorHeaderToolbar = ({ canvasRef }: IEditorHeaderToolbarProps) => {
                     <>
                         <S.OptionBox>
                             <T.Body2>두께:</T.Body2>
-                            <HeaderOptionInputBox option="width" type="number" suffix="px" />
+                            <HeaderOptionInputBox option="width" type="number" suffix="px" isArrow />
                         </S.OptionBox>
                         <S.OptionBox>
                             <T.Body2>색상:</T.Body2>
-                            <HeaderOptionInputBox option="color" type="color" suffix="px" />
+                            <HeaderOptionInputBox option="color" type="color" width={40} />
                         </S.OptionBox>
                     </>
                 ) : selectedTool === "shape" ? (
@@ -132,7 +76,7 @@ const EditorHeaderToolbar = ({ canvasRef }: IEditorHeaderToolbarProps) => {
                         <S.IconWrapper
                             isActive={selectedToolOption?.shapeTarget === "ellipse"}
                             onClick={() => {
-                                handleOnShapeTarget("ellipse");
+                                setShapeTarget("ellipse");
                             }}
                         >
                             <CircleOutlinedIcon />
@@ -140,7 +84,7 @@ const EditorHeaderToolbar = ({ canvasRef }: IEditorHeaderToolbarProps) => {
                         <S.IconWrapper
                             isActive={selectedToolOption?.shapeTarget === "rect"}
                             onClick={() => {
-                                handleOnShapeTarget("rect");
+                                setShapeTarget("rect");
                             }}
                         >
                             <SquareOutlinedIcon />
@@ -148,7 +92,7 @@ const EditorHeaderToolbar = ({ canvasRef }: IEditorHeaderToolbarProps) => {
                         <S.IconWrapper
                             isActive={selectedToolOption?.shapeTarget === "triangle"}
                             onClick={() => {
-                                handleOnShapeTarget("triangle");
+                                setShapeTarget("triangle");
                             }}
                         >
                             <ChangeHistoryOutlinedIcon />
@@ -160,32 +104,32 @@ const EditorHeaderToolbar = ({ canvasRef }: IEditorHeaderToolbarProps) => {
                                 type="number"
                                 prefix="H"
                                 suffix="px"
-                                width={140}
+                                width={150}
                             />
                             <HeaderOptionInputBox
                                 option="shapeTotalWidth"
                                 type="number"
                                 prefix="W"
                                 suffix="px"
-                                width={140}
+                                width={150}
                             />
                         </S.OptionBox>
                         <S.OptionBox>
                             <T.Body2>위치:</T.Body2>
-                            <HeaderOptionInputBox option="shapeTop" type="number" prefix="Y" width={140} />
-                            <HeaderOptionInputBox option="shapeLeft" type="number" prefix="W" width={140} />
+                            <HeaderOptionInputBox option="shapeTop" type="number" prefix="Y" width={130} />
+                            <HeaderOptionInputBox option="shapeLeft" type="number" prefix="W" width={130} />
                         </S.OptionBox>
                         <S.OptionBox>
                             <T.Body2>색상:</T.Body2>
-                            <HeaderOptionInputBox option="shapeFill" type="color" />
+                            <HeaderOptionInputBox option="shapeFill" type="color" width={40} />
                         </S.OptionBox>
                         <S.OptionBox>
                             <T.Body2>테두리 두께:</T.Body2>
-                            <HeaderOptionInputBox option="shapeBorderWidth" type="number" />
+                            <HeaderOptionInputBox option="shapeBorderWidth" type="number" suffix="px" isArrow />
                         </S.OptionBox>
                         <S.OptionBox>
                             <T.Body2>테두리 색상:</T.Body2>
-                            <HeaderOptionInputBox option="shapeBorderColor" type="color" />
+                            <HeaderOptionInputBox option="shapeBorderColor" type="color" width={40} />
                         </S.OptionBox>
                         <S.IconWrapper onClick={handleDeleteShape}>
                             <DeleteForeverIcon />
@@ -193,7 +137,7 @@ const EditorHeaderToolbar = ({ canvasRef }: IEditorHeaderToolbarProps) => {
                         <S.IconWrapper onClick={handleRotateShape}>
                             <RotateRightIcon />
                         </S.IconWrapper>
-                        <S.IconWrapper onClick={handleCopyShape}>
+                        <S.IconWrapper onClick={handleCopyAndPasteShape}>
                             <ContentCopyIcon />
                         </S.IconWrapper>
                     </>
