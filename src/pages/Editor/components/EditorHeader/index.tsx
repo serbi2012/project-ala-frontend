@@ -1,8 +1,8 @@
-import { T } from "../../../../styles/TextGuide.styles";
-import * as S from "./EditorHeader.styles";
+import { T } from "../../../../styles/textGuides.styles";
+import * as S from "./index.styles";
 import HomeIcon from "@mui/icons-material/Home";
-import { IEditorHeaderProps } from "./EditorHeader.types";
 import { Link } from "react-router-dom";
+import { ICanvasRef } from "../../../../types/canvasRef";
 
 const HEADER_MENU_ITEMS = [
     { title: "파일" },
@@ -16,7 +16,7 @@ const HEADER_MENU_ITEMS = [
     { title: "도움" },
 ];
 
-const EditorHeader = ({ canvasRef }: IEditorHeaderProps) => {
+const EditorHeader = ({ canvasRef }: ICanvasRef) => {
     canvasRef;
 
     return (

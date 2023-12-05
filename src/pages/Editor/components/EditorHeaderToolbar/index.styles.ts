@@ -1,19 +1,15 @@
 import { styled } from "styled-components";
 
 export const MainWrapper = styled.div`
-    display: grid;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 10px;
-    height: calc(100vh - 85px);
-    width: 100px;
-    grid-template-columns: repeat(2, 30px);
-    grid-template-rows: repeat(19, 30px);
-    margin-top: 5px;
-    border-top-right-radius: 10px;
-    gap: 15px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0px 10px;
+    min-height: 40px;
+    width: 100%;
+    gap: 10px;
     background-color: var(--brand-primary-gray);
-    z-index: 9999999 !important;
+    z-index: 99999 !important;
 `;
 
 export const IconWrapper = styled.div<{ isActive?: boolean }>`
@@ -51,4 +47,14 @@ export const IconWrapper = styled.div<{ isActive?: boolean }>`
             color: ${({ isActive }) => (isActive ? "var(--brand-primary-gray)" : "white")};
         }
     }
+`;
+
+export const VerticalLine = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 25px;
+    width: 0px;
+    user-select: none;
+    border-right: 1px solid white;
 `;

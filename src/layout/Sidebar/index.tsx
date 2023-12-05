@@ -1,5 +1,5 @@
-import { T } from "../../styles/TextGuide.styles";
-import * as S from "./Sidebar.styles";
+import { T } from "../../styles/textGuides.styles";
+import * as S from "./index.styles";
 import HomeIcon from "@mui/icons-material/Home";
 
 const SIDEBAR_MENU_ITEMS = [{ icon: <HomeIcon />, title: "Home", link: "/" }];

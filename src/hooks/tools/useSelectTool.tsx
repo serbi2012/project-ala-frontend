@@ -1,12 +1,8 @@
-import { MutableRefObject } from "react";
 import { useRecoilState } from "recoil";
-import { selectedToolState } from "../recoil/atoms/selectedToolState";
+import { selectedToolState } from "../../recoil/atoms/selectedToolState";
+import { ICanvasRef } from "../../types/canvasRef";
 
-interface IUseSelectTool {
-    canvasRef?: MutableRefObject<fabric.Canvas> | any;
-}
-
-const useSelectTool = ({ canvasRef }: IUseSelectTool) => {
+const useSelectTool = ({ canvasRef }: ICanvasRef) => {
     const [, setSelectedTool] = useRecoilState(selectedToolState);
 
     const handleOnSelectTool = () => {
@@ -19,10 +15,7 @@ const useSelectTool = ({ canvasRef }: IUseSelectTool) => {
             setSelectedTool("select");
 
             canvas.forEachObject((obj: any) => {
-                obj.set({
-                    selectable: true,
-                    evented: true,
-                });
+                obj.set({ selectable: true, evented: true });
             });
 
             canvas.renderAll();

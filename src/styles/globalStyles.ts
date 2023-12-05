@@ -3,27 +3,46 @@ import { createGlobalStyle } from "styled-components";
 const styled = { createGlobalStyle };
 
 export const GlobalStyle = styled.createGlobalStyle`
+    // SECTION - Default Setting
     *,
     *::before,
     *::after {
-        margin: 0;
-        padding: 0;
         box-sizing: border-box;
         appearance: none;
     }
 
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    p {
+        font-family: "Noto Sans KR";
+        color: var(--color-font-darknavy);
+    }
+
+    a {
+        text-decoration: none;
+        color: black;
+    }
+
+    // SECTION - Color Variable
     :root {
         --brand-primary-dark: #3e414a;
         --brand-primary-gray: #606b73;
         --brand-secondary-dark: #313a40;
         --brand-secondary-dark-hover: #2f3438;
         --brand-secondary-dark-active: #474f55;
+        --font-color-darknavy: #333333;
         --header-input-color: #474f55;
         --header-input-color-hover: #b2c5d4;
         --header-input-color-focus: #d4ebfc;
         --workspace-color: #171719;
+        --white-color: #ffffff;
     }
 
+    // SECTION - Text Guide
     h1,
     h2,
     h3,
@@ -54,17 +73,7 @@ export const GlobalStyle = styled.createGlobalStyle`
         font-weight: 400;
     }
 
-    a {
-        text-decoration: none;
-        color: black;
-    }
-
-    .center-align {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-    }
-
+    // SECTION - Scrollbar
     ::-webkit-scrollbar {
         width: 16px;
     }
@@ -80,5 +89,17 @@ export const GlobalStyle = styled.createGlobalStyle`
 
     ::-webkit-scrollbar-thumb:hover {
         background: #555;
+    }
+
+    // SECTION - Google Icons
+    .material-symbols-outlined {
+        color: white;
+    }
+
+    // SECTION - Custom Class
+    .center-align {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
     }
 `;

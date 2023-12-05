@@ -1,12 +1,8 @@
-import { MutableRefObject } from "react";
 import { useRecoilState } from "recoil";
-import { selectedToolOptionState, selectedToolState } from "../recoil/atoms/selectedToolState";
+import { selectedToolOptionState, selectedToolState } from "../../recoil/atoms/selectedToolState";
+import { ICanvasRef } from "../../types/canvasRef";
 
-interface IUseDrawingTool {
-    canvasRef?: MutableRefObject<fabric.Canvas> | any;
-}
-
-const useDrawingTool = ({ canvasRef }: IUseDrawingTool) => {
+const useDrawingTool = ({ canvasRef }: ICanvasRef) => {
     const [, setSelectedTool] = useRecoilState(selectedToolState);
     const [selectedToolOption, setSelectedToolOption] = useRecoilState<any>(selectedToolOptionState);
 

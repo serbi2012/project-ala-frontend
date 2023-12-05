@@ -1,13 +1,16 @@
 import React, { useEffect, useRef } from "react";
 import { fabric } from "fabric";
-import * as S from "./Editor.styles";
-import EditorHeader from "./components/EditorHeader/EditorHeader.component";
-import EditorHeaderToolbar from "./components/EditorHeaderToolbar/EditorHeaderToolbar.component";
-import EditorSideToolbar from "./components/EditorSideToolbar/EditorSideToolbar.component";
+import * as S from "./index.styles";
+import EditorHeader from "./components/EditorHeader";
+import EditorHeaderToolbar from "./components/EditorHeaderToolbar";
+import EditorSideToolbar from "./components/EditorSideToolbar";
 import { AlignGuidelines } from "fabric-guideline-plugin";
+import { useHotkeysSetup } from "./hooks/useHotkeysSetup";
 
 const Editor = () => {
     const drawingCanvas = useRef<fabric.Canvas | null>(null);
+
+    useHotkeysSetup({ canvasRef: drawingCanvas });
 
     useEffect(() => {
         if (!drawingCanvas.current) {

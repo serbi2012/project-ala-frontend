@@ -59,6 +59,8 @@ const Text = styled.p<TextComponentProps>`
     ${({ size }) => size && sizes[size]}
     font-weight: ${({ fontWeight }) => fontWeight};
     color: ${({ color }) => color ?? "var(--brand-primary-dark)"};
+    margin: 0;
+    padding: 0;
 `;
 export const T = {
     Title1: styled(Text).attrs({ size: 30, fontWeight: 700 })``,

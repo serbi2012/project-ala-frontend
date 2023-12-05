@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
-import Main from "../pages/Main/Main.component";
-import Editor from "../pages/Editor/Editor.component";
+import Main from "../pages/Main";
+import Editor from "../pages/Editor";
 
 const Router = () => {
     return (
