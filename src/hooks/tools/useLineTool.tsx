@@ -49,6 +49,7 @@ const useLineTool = ({ canvasRef }: ICanvasRef) => {
 
         const continueDrawing = (options: any) => {
             if (!isDown || !line) return;
+            if (selectedTool !== "line") return;
 
             const pointer = canvas.getPointer(options.e);
 
@@ -73,6 +74,8 @@ const useLineTool = ({ canvasRef }: ICanvasRef) => {
         };
 
         const finishDrawing = () => {
+            if (selectedTool !== "line") return;
+
             isDown = false;
             canvas.selection = true;
         };
