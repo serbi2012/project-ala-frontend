@@ -1,8 +1,4 @@
 import * as S from "./index.styles";
-import NearMeIcon from "@mui/icons-material/NearMe";
-import BrushIcon from "@mui/icons-material/Brush";
-import BackHandIcon from "@mui/icons-material/BackHand";
-import CategoryIcon from "@mui/icons-material/Category";
 import { useRecoilState } from "recoil";
 import { selectedToolState } from "../../../../recoil/atoms/selectedToolState";
 import useCanvasMoveTool from "../../../../hooks/tools/useCanvasMoveTool";
@@ -11,29 +7,31 @@ import useShapeTool from "../../../../hooks/tools/useShapeTool";
 import useSelectTool from "../../../../hooks/tools/useSelectTool";
 import { ICanvasRef } from "../../../../types/canvasRef";
 import useLineTool from "../../../../hooks/tools/useLineTool";
+import { useToolIcons } from "../../../../hooks/common/useToolIcons";
 
 const EditorSideToolbar = ({ canvasRef }: ICanvasRef) => {
     const [selectedTool] = useRecoilState(selectedToolState);
 
-    const { handleOnSelectTool } = useSelectTool({ canvasRef });
-    const { handleOnCanvasMoveTool } = useCanvasMoveTool({ canvasRef });
-    const { handleOnDrawingTool } = useDrawingTool({ canvasRef });
-    const { handleOnShapeTool } = useShapeTool({ canvasRef });
-    const { handleOnLineTool } = useLineTool({ canvasRef });
+    const toolIcons = useToolIcons();
+    const toolHandlers = {
+        select: useSelectTool({ canvasRef }).handleOnSelectTool,
+        canvasMove: useCanvasMoveTool({ canvasRef }).handleOnCanvasMoveTool,
+        drawing: useDrawingTool({ canvasRef }).handleOnDrawingTool,
+        line: useLineTool({ canvasRef }).handleOnLineTool,
+        shape: useShapeTool({ canvasRef }).handleOnShapeTool,
+    };
 
-    const SIDE_TOOL_ITEMS = [
-        { name: "select", onClick: handleOnSelectTool, icon: <NearMeIcon /> },
-        { name: "canvasMove", onClick: handleOnCanvasMoveTool, icon: <BackHandIcon /> },
-        { name: "drawing", onClick: handleOnDrawingTool, icon: <BrushIcon /> },
-        { name: "line", onClick: handleOnLineTool, icon: <BrushIcon /> },
-        { name: "shape", onClick: handleOnShapeTool, icon: <CategoryIcon /> },
-    ];
+    const SIDE_TOOL_ITEMS = Object.entries(toolHandlers).map(([name, onClick]) => ({
+        name,
+        onClick,
+        icon: toolIcons[name],
+    }));
 
     return (
         <S.MainWrapper>
             {SIDE_TOOL_ITEMS.map((item, index) => (
-                <S.IconWrapper key={index} onClick={item?.onClick} isActive={selectedTool === item?.name}>
-                    {item?.icon}
+                <S.IconWrapper key={index} onClick={item.onClick} isActive={selectedTool === item.name}>
+                    {item.icon}
                 </S.IconWrapper>
             ))}
         </S.MainWrapper>

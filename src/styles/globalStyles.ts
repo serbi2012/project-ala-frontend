@@ -3,6 +3,7 @@ import { createGlobalStyle } from "styled-components";
 const styled = { createGlobalStyle };
 
 export const GlobalStyle = styled.createGlobalStyle`
+    // SECTION - Default Setting
     *,
     *::before,
     *::after {
@@ -21,6 +22,12 @@ export const GlobalStyle = styled.createGlobalStyle`
         color: var(--color-font-darknavy);
     }
 
+    a {
+        text-decoration: none;
+        color: black;
+    }
+
+    // SECTION - Color Variable
     :root {
         --brand-primary-dark: #3e414a;
         --brand-primary-gray: #606b73;
@@ -35,6 +42,7 @@ export const GlobalStyle = styled.createGlobalStyle`
         --white-color: #ffffff;
     }
 
+    // SECTION - Text Guide
     h1,
     h2,
     h3,
@@ -65,17 +73,7 @@ export const GlobalStyle = styled.createGlobalStyle`
         font-weight: 400;
     }
 
-    a {
-        text-decoration: none;
-        color: black;
-    }
-
-    .center-align {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-    }
-
+    // SECTION - Scrollbar
     ::-webkit-scrollbar {
         width: 16px;
     }
@@ -91,5 +89,17 @@ export const GlobalStyle = styled.createGlobalStyle`
 
     ::-webkit-scrollbar-thumb:hover {
         background: #555;
+    }
+
+    // SECTION - Google Icons
+    .material-symbols-outlined {
+        color: white;
+    }
+
+    // SECTION - Custom Class
+    .center-align {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
     }
 `;

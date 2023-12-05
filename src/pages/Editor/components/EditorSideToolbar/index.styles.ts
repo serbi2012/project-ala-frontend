@@ -28,7 +28,8 @@ export const IconWrapper = styled.div<{ isActive?: boolean }>`
     transition: all ease 0.2s;
     background-color: ${({ isActive }) => (isActive ? "white" : "transparent")};
 
-    & > svg {
+    & > svg,
+    & > span {
         color: ${({ isActive }) => (isActive ? "var(--brand-primary-gray)" : "white")};
     }
 
@@ -37,7 +38,8 @@ export const IconWrapper = styled.div<{ isActive?: boolean }>`
         border: 1px solid white;
         background-color: ${({ isActive }) => (isActive ? "white" : "transparent")};
 
-        & > svg {
+        & > svg,
+        & > span {
             color: ${({ isActive }) => (isActive ? "var(--brand-primary-gray)" : "white")};
         }
     }
@@ -47,7 +49,8 @@ export const IconWrapper = styled.div<{ isActive?: boolean }>`
         border: 1px solid white;
         background-color: ${({ isActive }) => (isActive ? "white" : "transparent")};
 
-        & > svg {
+        & > svg,
+        & > span {
             color: ${({ isActive }) => (isActive ? "var(--brand-primary-gray)" : "white")};
         }
     }

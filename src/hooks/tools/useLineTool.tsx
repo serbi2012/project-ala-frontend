@@ -1,59 +1,68 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { fabric } from "fabric";
 import { useRecoilState } from "recoil";
 import { selectedToolState, selectedToolOptionState } from "../../recoil/atoms/selectedToolState";
 import { ICanvasRef } from "../../types/canvasRef";
 
 const useLineTool = ({ canvasRef }: ICanvasRef) => {
-    const [, setSelectedTool] = useRecoilState(selectedToolState);
+    const [selectedTool, setSelectedTool] = useRecoilState(selectedToolState);
     const [selectedToolOption] = useRecoilState<any>(selectedToolOptionState);
+
+    const currentLineRef = useRef<fabric.Object | null>(null);
 
     let line: fabric.Line | null = null;
     let isDown: boolean = false;
 
-    const handleOnLineTool = () => {
+    useEffect(() => {
         const canvas = canvasRef.current;
+
         if (!canvas) return;
 
-        canvas.isDrawingMode = false;
-        setSelectedTool("line");
+        const startDrawing = (options: any) => {
+            if (selectedTool !== "line") return;
 
-        canvas.selection = false; // Disable group selection
+            if (options?.target) {
+                if (currentLineRef.current !== options.target) {
+                    currentLineRef.current = options.target;
+                }
+            } else {
+                isDown = true;
 
-        canvas.on("mouse:down", (options: any) => {
-            isDown = true;
-            const pointer = canvas.getPointer(options.e);
-            const points = [pointer.x, pointer.y, pointer.x, pointer.y];
-            line = new fabric.Line(points, {
-                strokeWidth: selectedToolOption.lineWidth || 2,
-                fill: selectedToolOption.lineColor || "black",
-                stroke: selectedToolOption.lineColor || "black",
-                originX: "center",
-                originY: "center",
-                selectable: true,
-                evented: true,
-            });
-            canvas.add(line);
+                const pointer = canvas.getPointer(options.e);
+                const points = [pointer.x, pointer.y, pointer.x, pointer.y];
 
-            canvas.selection = false;
-        });
+                line = new fabric.Line(points, {
+                    strokeWidth: selectedToolOption.lineWidth || 2,
+                    fill: selectedToolOption.lineColor || "black",
+                    stroke: selectedToolOption.lineColor || "black",
+                    originX: "center",
+                    originY: "center",
+                    selectable: true,
+                    evented: true,
+                });
 
-        canvas.on("mouse:move", (options: any) => {
+                canvas.add(line);
+
+                canvas.selection = false;
+            }
+        };
+
+        const continueDrawing = (options: any) => {
             if (!isDown || !line) return;
+
             const pointer = canvas.getPointer(options.e);
 
             let x2 = pointer.x;
             let y2 = pointer.y;
 
-            // If shift key is pressed, we constrain the line to be straight
             if (options.e.shiftKey) {
                 const xDiff = x2 - Number(line.x1);
                 const yDiff = y2 - Number(line.y1);
 
                 if (Math.abs(xDiff) > Math.abs(yDiff)) {
-                    y2 = line.y1; // Horizontal line
+                    y2 = line.y1;
                 } else {
-                    x2 = line.x1; // Vertical line
+                    x2 = line.x1;
                 }
             }
 
@@ -61,24 +70,32 @@ const useLineTool = ({ canvasRef }: ICanvasRef) => {
             canvas.renderAll();
 
             canvas.selection = true;
-        });
+        };
 
-        canvas.on("mouse:up", () => {
+        const finishDrawing = () => {
             isDown = false;
-        });
-    };
+            canvas.selection = true;
+        };
 
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
+        canvas.on("mouse:down", startDrawing);
+        canvas.on("mouse:move", continueDrawing);
+        canvas.on("mouse:up", finishDrawing);
 
         return () => {
-            // Clean up
             canvas.off("mouse:down");
             canvas.off("mouse:move");
             canvas.off("mouse:up");
         };
-    }, [canvasRef]); // Make sure to only run once
+    }, [canvasRef, selectedTool]);
+
+    const handleOnLineTool = () => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        canvas.isDrawingMode = false;
+
+        setSelectedTool("line");
+    };
 
     return { handleOnLineTool };
 };
