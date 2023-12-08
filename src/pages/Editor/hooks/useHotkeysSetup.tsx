@@ -10,16 +10,8 @@ export const useHotkeysSetup = ({ canvasRef }: ICanvasRef) => {
     // OS 감지하여 Meta(Mac) 또는 Control(Windows/Linux) 단축키 사용
     const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
 
-    useCustomHotkeys("Delete", handleDeleteShape);
-    useCustomHotkeys(isMac ? "Meta+Backspace" : "Delete", handleDeleteShape);
-    useCustomHotkeys("Control+KeyR", handleRotateShape);
-
-    // OS에 따른 단축키 설정
-    if (isMac) {
-        useCustomHotkeys("Meta+KeyC", handleCopyShape);
-        useCustomHotkeys("Meta+KeyV", handlePasteShape);
-    } else {
-        useCustomHotkeys("Control+KeyC", handleCopyShape);
-        useCustomHotkeys("Control+KeyV", handlePasteShape);
-    }
+    useCustomHotkeys(isMac ? "Meta+Backspace" : "Delete", handleDeleteShape); // NOTE - 선택한 객체 삭제
+    useCustomHotkeys("Control+KeyR", handleRotateShape); // NOTE - 선택한 객체 오른쪽으로 90도 회전
+    useCustomHotkeys(isMac ? "Meta+KeyC" : "Control+KeyC", handleCopyShape); // NOTE - 선택한 객체 복사
+    useCustomHotkeys(isMac ? "Meta+KeyV" : "Control+KeyV", handlePasteShape); // NOTE - 선택한 객체 붙혀넣기
 };
