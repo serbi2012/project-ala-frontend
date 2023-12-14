@@ -3,6 +3,8 @@ import * as S from "./index.styles";
 import HomeIcon from "@mui/icons-material/Home";
 import { Link } from "react-router-dom";
 import { ICanvasRef } from "../../../../types/canvasRef";
+import { selectedToolState } from "../../../../recoil/atoms/selectedToolState";
+import { useRecoilState } from "recoil";
 
 const HEADER_MENU_ITEMS = [
     { title: "파일" },
@@ -17,11 +19,17 @@ const HEADER_MENU_ITEMS = [
 ];
 
 const EditorHeader = ({ canvasRef }: ICanvasRef) => {
+    const [, setSelectedTool] = useRecoilState(selectedToolState);
     canvasRef;
 
     return (
         <S.MainWrapper>
-            <Link to="/">
+            <Link
+                to="/"
+                onClick={() => {
+                    setSelectedTool("");
+                }}
+            >
                 <S.IconWrapper>
                     <HomeIcon />
                 </S.IconWrapper>
