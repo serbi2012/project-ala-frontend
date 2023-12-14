@@ -6,8 +6,12 @@ import EditorHeaderToolbar from "./components/EditorHeaderToolbar";
 import EditorSideToolbar from "./components/EditorSideToolbar";
 import { AlignGuidelines } from "fabric-guideline-plugin";
 import { useHotkeysSetup } from "./hooks/useHotkeysSetup";
+import { pageSizeState } from "../../recoil/atoms/pageOptionState copy";
+import { useRecoilState } from "recoil";
 
 const Editor = () => {
+    const [pageSize] = useRecoilState(pageSizeState);
+
     const drawingCanvas = useRef<fabric.Canvas | null>(null);
 
     useHotkeysSetup({ canvasRef: drawingCanvas });
@@ -42,7 +46,7 @@ const Editor = () => {
             <S.DrawingContainer>
                 <EditorSideToolbar canvasRef={drawingCanvas} />
                 <S.FabricjsCanvasWrapper id="fabricjs-canvas-wrapper">
-                    <canvas id="drawing-canvas" width={1280} height={720} />
+                    <canvas id="drawing-canvas" width={pageSize.width} height={pageSize.height} />
                 </S.FabricjsCanvasWrapper>
             </S.DrawingContainer>
         </S.MainWrapper>
