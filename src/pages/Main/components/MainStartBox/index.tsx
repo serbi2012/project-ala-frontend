@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
 import { pageSizeState } from "../../../../recoil/atoms/pageOptionState copy";
+import DoneIcon from "@mui/icons-material/Done";
 
 const PAGE_SIZE_ITEMS = [
     { width: 2480, height: 3508, ratio: "0.7", name: "A4", size: "210mm x 297mm" },
@@ -48,8 +49,8 @@ const MainStartBox: React.FC = () => {
                     </S.PageExampleContainer>
                     <S.HorizonLine />
                     <Link to="/editor">
-                        <Button variant="contained" size="large" startIcon={<AddBoxIcon />}>
-                            선택
+                        <Button variant="contained" size="large" startIcon={<DoneIcon />}>
+                            시작하기
                         </Button>
                     </Link>
                 </S.ModalWrapper>
