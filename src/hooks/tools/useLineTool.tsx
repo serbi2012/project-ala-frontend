@@ -39,6 +39,20 @@ const useLineTool = ({ canvasRef }: ICanvasRef) => {
                     originY: "center",
                     selectable: true,
                     evented: true,
+                    lockScalingY: true,
+                    lockScalingFlip: true,
+                });
+
+                line.setControlsVisibility({
+                    tl: false,
+                    tr: false,
+                    mt: false,
+                    mb: false,
+                    ml: true,
+                    mr: true,
+                    bl: false,
+                    br: false,
+                    mtr: true,
                 });
 
                 canvas.add(line);
@@ -57,14 +71,16 @@ const useLineTool = ({ canvasRef }: ICanvasRef) => {
             let y2 = pointer.y;
 
             if (options.e.shiftKey) {
-                const xDiff = x2 - Number(line.x1);
-                const yDiff = y2 - Number(line.y1);
+                const angleRad = Math.atan2(y2 - Number(line?.y1), x2 - Number(line?.x1));
+                const angleDeg = (angleRad * 180) / Math.PI;
 
-                if (Math.abs(xDiff) > Math.abs(yDiff)) {
-                    y2 = line.y1;
-                } else {
-                    x2 = line.x1;
-                }
+                const snappedAngleDeg = Math.round(angleDeg / 45) * 45;
+
+                const radians = (snappedAngleDeg * Math.PI) / 180;
+
+                const distance = Math.sqrt((x2 - Number(line?.x1)) ** 2 + (y2 - Number(line?.y1)) ** 2);
+                x2 = Number(line?.x1) + distance * Math.cos(radians);
+                y2 = Number(line?.y1) + distance * Math.sin(radians);
             }
 
             line.set({ x2: x2, y2: y2 });
